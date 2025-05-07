@@ -1,6 +1,6 @@
-name: General Issue
-description: 버그 리포트 또는 기능 제안을 위한 템플릿
-title: "[버그] ..." 또는 "[기능제안] ..."
+name: 일반 이슈
+description: 버그 리포트, 기능 제안, 문서 개선 등 모든 일반 이슈를 등록할 수 있습니다.
+title: "[이슈] 제목을 입력하세요"
 labels: ["needs triage"]
 assignees: []
 
@@ -21,16 +21,17 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: 설명
-      description: 어떤 문제가 있거나 어떤 기능을 제안하고 싶은지 간단히 설명해주세요.
-      placeholder: 예) 로그인 버튼을 클릭해도 아무 반응이 없습니다.
+      label: 이슈 설명
+      description: 문제가 무엇인지 또는 어떤 기능을 제안하는지 구체적으로 작성해주세요.
+      placeholder: |
+        예: 로그인 버튼을 클릭해도 아무 반응이 없습니다.
     validations:
       required: true
 
   - type: textarea
-    id: steps
+    id: reproduction-steps
     attributes:
-      label: 재현 방법 (버그일 경우)
+      label: 재현 절차 (버그일 경우)
       description: 문제를 어떻게 재현할 수 있는지 단계별로 설명해주세요.
       placeholder: |
         1. 로그인 페이지로 이동
@@ -44,17 +45,17 @@ body:
     id: environment
     attributes:
       label: 실행 환경
-      description: 해당 이슈를 발견한 환경 정보를 입력해주세요.
-      placeholder: 예) Chrome 123 / macOS 14.1 / Node.js 20.10
+      description: 해당 이슈를 발견한 환경을 알려주세요 (브라우저, 운영체제 등).
+      placeholder: 예: macOS 14.1 / Chrome 123.0 / Node.js 20.10
     validations:
       required: false
 
   - type: textarea
     id: screenshots
     attributes:
-      label: 스크린샷/로그
-      description: 문제를 설명하는 데 도움이 될 수 있는 이미지나 콘솔 로그 등을 첨부해주세요.
-      placeholder: drag & drop your image here, or paste error logs
+      label: 관련 스크린샷이나 로그
+      description: 스크린샷이나 에러 로그가 있다면 첨부해주세요.
+      placeholder: 여기에 이미지를 드래그하거나 로그를 붙여넣을 수 있습니다.
     validations:
       required: false
 
@@ -62,6 +63,6 @@ body:
     id: additional
     attributes:
       label: 기타 참고 사항
-      description: 이외에 공유하고 싶은 내용이 있다면 작성해주세요.
+      description: 관련하여 더 공유하고 싶은 정보가 있다면 적어주세요.
     validations:
       required: false
