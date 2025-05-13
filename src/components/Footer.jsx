@@ -40,7 +40,7 @@ const FooterIcon = styled.img`
 export const Footer = () => {
   return (
     <FooterWrapper>
-      <StyledNavLink to="/">
+      <StyledNavLink to="/home">
         <FooterIcon src={mainIcon} alt="메인" />
       </StyledNavLink>
       <StyledNavLink to="/community">
