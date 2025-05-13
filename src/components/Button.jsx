@@ -4,7 +4,9 @@ const StyledButton = styled.button`
   border-radius: var(--radius-base);
   padding: 0.5rem 1rem;
   width: 100%;
+  height: 100%;
   font-weight: bold;
+  font-size: ${props => props.fontSize || '15px'};
   background-color: var(--color-secondary); // 기본 배경
 
   ${props =>
@@ -13,6 +15,13 @@ const StyledButton = styled.button`
       color: white;
       background-color: var(--color-primary); // primary일 때 덮어쓰기
     `}
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: var(--color-primary); // 비활성화 색상
+    color: var(--color-disabled-text); // 비활성화 텍스트 색상
+    opacity: 0.5;
+  }
 `
 
 export const Button = ({ children, ...props }) => {
