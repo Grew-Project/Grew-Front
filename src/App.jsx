@@ -5,9 +5,11 @@ import Signup from './pages/Signup'
 import Layout from './layouts/CommonLayout'
 import AuthLayout from './layouts/AuthLayout'
 import MyPage from './pages/MyPage'
-
+import GlobalStyle from './styles/GlobalStyle'
+    
 function App() {
   return (
+    <GlobalStyle />
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
