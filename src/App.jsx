@@ -6,22 +6,24 @@ import Layout from './layouts/CommonLayout'
 import AuthLayout from './layouts/AuthLayout'
 import MyPage from './pages/MyPage'
 import GlobalStyle from './styles/GlobalStyle'
-    
+
 function App() {
   return (
-    <GlobalStyle />
-    <BrowserRouter>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/mypage" element={<MyPage />} />
-        </Route>
-        <Route element={<AuthLayout />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <>
+      <GlobalStyle />
+      <BrowserRouter>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/mypage" element={<MyPage />} />
+          </Route>
+          <Route element={<AuthLayout />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </>
   )
 }
 
