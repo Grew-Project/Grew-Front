@@ -10,7 +10,7 @@ export const ButtonRow = styled.div`
 export const CancelButton = styled.button`
   padding: 0.5rem 1rem;
   border-radius: var(--radius-base);
-  background: var(--color-gray);
+  background: var(--color-light-gray);
   font-weight: bold;
 `
 
