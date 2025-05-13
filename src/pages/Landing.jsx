@@ -39,11 +39,17 @@ const Container = styled.div`
 const Title = styled.div`
   font-size: 24px;
   font-weight: bold;
+  text-align: center;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 `
 const Desc = styled.div`
   text-align: center;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 `
 const ButtonWrapper = styled(Link)`
-  width: 270px;
+  width: 95%;
+  max-width: 320px;
   height: 48px;
 `

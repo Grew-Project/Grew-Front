@@ -18,9 +18,9 @@ const StyledButton = styled.button`
 
   &:disabled {
     cursor: not-allowed;
-    background-color: var(--color-gray); // 비활성화 색상
+    background-color: var(--color-primary); // 비활성화 색상
     color: var(--color-disabled-text); // 비활성화 텍스트 색상
-    opacity: 0.6;
+    opacity: 0.5;
   }
 `
 

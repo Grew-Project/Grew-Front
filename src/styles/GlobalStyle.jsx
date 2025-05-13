@@ -13,6 +13,8 @@ const GlobalStyle = createGlobalStyle`
         --color-background: #fafff5;
         --color-footer: #363636;
         --color-gray: #d9d9d9;
+        --font-color-black: #212121;
+        --font-color-gray: #555454;
         --fs12: 12px;
         --fs15: 15px;
         --fs20: 20px;
@@ -28,6 +30,10 @@ const GlobalStyle = createGlobalStyle`
         outline: none;
         background-color: transparent;
         cursor: pointer;
+    }
+    a{
+        text-decoration: none;
+        color: inherit;
     }
 `
 
