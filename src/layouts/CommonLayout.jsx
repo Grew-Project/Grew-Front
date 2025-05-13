@@ -1,6 +1,7 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 import styled from 'styled-components'
+import { Footer } from '../components/Footer'
 
 const CommonLayout = () => {
   return (
@@ -8,7 +9,7 @@ const CommonLayout = () => {
       <Wrapper>
         <Outlet />
       </Wrapper>
-      <Nav>내비게이션바</Nav>
+      <Footer />
     </Container>
   )
 }
@@ -28,13 +29,4 @@ const Wrapper = styled.div`
   position: relative;
   padding: 52px 24px 80px 24px;
   border: 1px solid red;
-`
-const Nav = styled.div`
-  border: 1px solid blue;
-  position: absolute;
-  bottom: 0;
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 480px;
-  height: 56px;
 `
