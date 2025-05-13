@@ -19,15 +19,21 @@ const Signup = () => {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleIdChange = e => {
-    setId(e.target.value)
+    if (e.target.value.length <= 16) {
+      setId(e.target.value)
+    }
     setIdError('')
   }
   const handlePasswordChange = e => {
-    setPassword(e.target.value)
+    if (e.target.value.length <= 16) {
+      setPassword(e.target.value)
+    }
     setPasswordError('')
   }
   const handlePasswordConfirmChange = e => {
-    setPasswordConfirm(e.target.value)
+    if (e.target.value.length <= 16) {
+      setPasswordConfirm(e.target.value)
+    }
     setPasswordConfirmError('')
   }
   const handleNicknameChange = e => {
@@ -50,7 +56,7 @@ const Signup = () => {
       setPasswordError('비밀번호를 입력해주세요')
       hasError = true
     } else if (password.length < 8) {
-      setPasswordError('8자 이상 입력해주세요')
+      setPasswordError('비밀번호는 8~16자로 입력해주세요')
       hasError = true
     }
     if (!passwordConfirm) {
@@ -62,6 +68,9 @@ const Signup = () => {
     }
     if (!nickname) {
       setNicknameError('닉네임을 입력해주세요')
+      hasError = true
+    } else if (!/^[가-힣]+$/.test(nickname.trim())) {
+      setNicknameError('닉네임은 ‘가나다’처럼 완성된 한글만 입력할 수 있어요')
       hasError = true
     }
     if (hasError) return
