@@ -78,7 +78,7 @@ const Login = () => {
         </ButtonWrapper>
       </StyledForm>
       <GotoSignupWrapper>
-        <div>아직 그루 회원이 아닌가요?</div>
+        <div>아직 그루 회원이 아니신가요?</div>
         <GotoSignup to="/signup">&nbsp;가입하기</GotoSignup>
       </GotoSignupWrapper>
     </Container>
@@ -104,12 +104,11 @@ const Back = styled(Link)`
   height: 32px;
 `
 const StyledForm = styled.form`
-  width: 95%;
+  width: 100%;
   max-width: 320px;
 `
 const InputContainer = styled.div`
   margin: 2rem 0 0.5rem 0;
-  width: 95%;
   max-width: 320px;
   display: flex;
   flex-direction: column;
@@ -127,13 +126,12 @@ const ErrorText = styled.div`
 `
 const ButtonWrapper = styled.div`
   display: flex;
-  width: 95%;
   max-width: 320px;
   height: 48px;
   margin-bottom: 1rem;
 `
 const GotoSignupWrapper = styled.div`
-  width: 95%;
+  width: 100%;
   max-width: 320px;
   display: flex;
   font-size: var(--fs15);
