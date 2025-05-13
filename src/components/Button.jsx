@@ -15,6 +15,13 @@ const StyledButton = styled.button`
       color: white;
       background-color: var(--color-primary); // primary일 때 덮어쓰기
     `}
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: var(--color-gray); // 비활성화 색상
+    color: var(--color-disabled-text); // 비활성화 텍스트 색상
+    opacity: 0.6;
+  }
 `
 
 export const Button = ({ children, ...props }) => {
