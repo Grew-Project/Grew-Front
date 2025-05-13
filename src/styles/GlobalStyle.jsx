@@ -11,10 +11,16 @@ const GlobalStyle = createGlobalStyle`
         --color-primary: #174b3c;
         --color-secondary: #cae8db;
         --color-background: #fafff5;
+        --color-footer: #363636;
+        --color-gray: #d9d9d9;
         --fs12: 12px;
         --fs15: 15px;
         --fs20: 20px;
         --radius-base: 10px;
+    }
+
+    body {
+        background-color: var(--color-background);
     }
 
     button {
