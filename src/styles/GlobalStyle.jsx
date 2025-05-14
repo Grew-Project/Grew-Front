@@ -13,6 +13,7 @@ const GlobalStyle = createGlobalStyle`
         --color-background: #fafff5;
         --color-footer: #363636;
         --color-black: #000000;
+        --color-white: #ffffff;
         --color-gray: #d9d9d9;
         --font-color-black: #212121;
         --font-color-gray: #555454;
@@ -34,6 +35,11 @@ const GlobalStyle = createGlobalStyle`
         background-color: transparent;
         cursor: pointer;
     }
+
+    ul {
+        list-style:none;
+    }
+    
     a{
         text-decoration: none;
         color: inherit;
