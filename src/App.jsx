@@ -7,6 +7,7 @@ import AuthLayout from './layouts/AuthLayout'
 import MyPage from './pages/MyPage'
 import Community from './pages/Community'
 import GlobalStyle from './styles/GlobalStyle'
+import Landing from './pages/Landing'
 
 function App() {
   return (
@@ -15,11 +16,12 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<Layout />}>
-            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/community" element={<Community />} />
           </Route>
           <Route element={<AuthLayout />}>
+            <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
           </Route>

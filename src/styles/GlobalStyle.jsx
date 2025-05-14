@@ -15,6 +15,8 @@ const GlobalStyle = createGlobalStyle`
         --color-black: #000000;
         --color-white: #ffffff;
         --color-gray: #d9d9d9;
+        --font-color-black: #212121;
+        --font-color-gray: #555454;
         --color-dark-gray: #555454;
         --fs12: 12px;
         --fs15: 15px;
@@ -35,6 +37,10 @@ const GlobalStyle = createGlobalStyle`
 
     ul {
         list-style:none;
+
+    a{
+        text-decoration: none;
+        color: inherit;
     }
 `
 
