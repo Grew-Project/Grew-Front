@@ -6,6 +6,9 @@ import loveFace from '@/assets/faces/love-face.svg'
 import flowerIcon from '@/assets/icons/flower-icon.svg'
 import leafIcon from '@/assets/icons/leaf-icon.svg'
 import profileIcon from '@/assets/icons/profile-icon.svg'
+import refreshIcon from '@/assets/icons/refresh-icon.svg'
+import gobackIcon from '@/assets/icons/goback-icon.svg'
+
 import styled from 'styled-components'
 import { useEffect, useState } from 'react'
 import { Card } from '../components/Card'
@@ -67,6 +70,15 @@ const Community = () => {
 
   return (
     <>
+      <Header>
+        <button>
+          <img src={gobackIcon} alt="뒤로가기" />
+        </button>
+        <h2>커뮤니티</h2>
+        <button onClick={fetchPostList}>
+          <img src={refreshIcon} alt="새로고침" />
+        </button>
+      </Header>
       <TabMenu>
         {menuItems.map(item => (
           <TabButton
@@ -218,4 +230,10 @@ const ProfileButton = styled.button`
     width: 18px;
     height: 18px;
   }
+`
+
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--fs20);
 `
