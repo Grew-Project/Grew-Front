@@ -6,9 +6,15 @@ import leaf from '../assets/icons/leaf-icon.svg'
 import flower from '../assets/icons/flower-icon.svg'
 import sign from '../assets/main-sign.png'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { InputTextModal } from '../components/modal/InputTextModal'
 
 const Home = () => {
   const [isAnswered, setIsAnswered] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [treeName, setTreeName] = useState('행복나무')
+  const [treeNameChange, setTreeNameChange] = useState(treeName)
+  const navigate = useNavigate()
 
   const treeImages = import.meta.glob('../assets/trees/사과나무*.png', {
     eager: true,
@@ -42,10 +48,32 @@ const Home = () => {
   const remaining = calculateRemainingToNextStage(answeredCount)
 
   const handleSignClick = () => {
-    console.log('표지판 누름')
+    setIsModalOpen(true)
+  }
+
+  const maxLength = 4
+  const handleConfirm = e => {
+    e.preventDefault()
+
+    if (treeNameChange.length > maxLength) {
+      return
+    } else if (treeNameChange.length <= 0) {
+      return
+    }
+    setTreeName(treeNameChange)
+    setIsModalOpen(false)
+  }
+  const handleModalClose = () => {
+    setIsModalOpen(false)
+    setTreeNameChange(treeName)
   }
   const handleTreeClick = () => {
-    console.log('나무 누름')
+    navigate('/question/today')
+  }
+  const handleTreeNameChange = e => {
+    if (e.target.value.length <= maxLength) {
+      setTreeNameChange(e.target.value)
+    }
   }
 
   return (
@@ -95,7 +123,7 @@ const Home = () => {
         <SignWrapper onClick={handleSignClick}>
           <Sign>
             <img src={sign} alt="표지판" />
-            <div>행복나무</div>
+            <div>{treeName}</div>
           </Sign>
         </SignWrapper>
         <TodayQuestion>
@@ -112,6 +140,17 @@ const Home = () => {
           )}
         </TodayQuestion>
       </Container>
+      {/* <InputTextModal message={'나무 이름을 변경해주세요'} /> */}
+      {isModalOpen && (
+        <InputTextModal
+          title={'나무 이름을 입력하세요'}
+          inputText={treeNameChange}
+          onChange={handleTreeNameChange}
+          onConfirm={handleConfirm}
+          onCancel={handleModalClose}
+          maxLength={maxLength}
+        />
+      )}
     </>
   )
 }
