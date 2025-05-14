@@ -7,6 +7,7 @@ import AuthLayout from './layouts/AuthLayout'
 import MyPage from './pages/MyPage'
 import GlobalStyle from './styles/GlobalStyle'
 import Landing from './pages/Landing'
+import TodayQuestion from './pages/TodayQuestion'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route element={<Layout />}>
             <Route path="/home" element={<Home />} />
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="/question/today" element={<TodayQuestion />} />
           </Route>
           <Route element={<AuthLayout />}>
             <Route path="/" element={<Landing />} />
