@@ -78,6 +78,9 @@ const Home = () => {
             <Counter>5</Counter>
           </NotificationIcon>
         </Notification>
+        <Tree>
+          <img src={sortedTreeImages[currentStage]} alt="나무 이미지" />
+        </Tree>
       </Container>
     </>
   )
@@ -153,7 +156,10 @@ const Level = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
   img {
+    position: absolute;
+    bottom: 0;
     width: 60%;
   }
 `
@@ -217,4 +223,14 @@ const Counter = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`
+const Tree = styled.div`
+  position: absolute;
+  bottom: 85px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  max-height: 470px;
+  display: flex;
+  justify-content: center;
 `
