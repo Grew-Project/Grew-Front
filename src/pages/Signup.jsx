@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import logo from '../assets/logo.svg'
 import styled from 'styled-components'
 import { Button } from '../components/Button'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Input } from '../components/Input'
 import goback from '../assets/icons/goback-icon.svg'
 import { Spinner } from '../components/Spinner'
 import { signup } from '../api/auth'
+import useAuthStore from '../store/useAuthStore'
 
 const Signup = () => {
   const [id, setId] = useState('')
@@ -19,6 +20,14 @@ const Signup = () => {
   const [nicknameError, setNicknameError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [welcomeName, setWelcomeName] = useState('')
+  const navigate = useNavigate()
+  const { isLoggedIn } = useAuthStore()
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/home')
+    }
+  }, [isLoggedIn, navigate])
 
   const handleIdChange = e => {
     if (e.target.value.length <= 16) {

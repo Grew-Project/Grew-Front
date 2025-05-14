@@ -7,6 +7,7 @@ import { Input } from '../components/Input'
 import goback from '../assets/icons/goback-icon.svg'
 import { Spinner } from '../components/Spinner'
 import { login } from '../api/auth'
+import useAuthStore from '../store/useAuthStore'
 
 const Login = () => {
   const [id, setId] = useState('')
@@ -14,6 +15,7 @@ const Login = () => {
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
+  const { login: setLoginState } = useAuthStore()
 
   const handleIdChange = e => {
     setId(e.target.value)
@@ -45,7 +47,7 @@ const Login = () => {
       const response = await login(userData)
       if (response.message === '로그인 성공') {
         navigate('/home')
-        localStorage.setItem('token', response.token)
+        setLoginState(response.token)
       }
     } catch (err) {
       if (
