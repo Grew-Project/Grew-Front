@@ -2,8 +2,20 @@ import styled from 'styled-components'
 import grass from '../assets/main-grass.svg'
 import cloud from '../assets/main-cloud.png'
 import help from '../assets/icons/main-help.svg'
+import leaf from '../assets/icons/leaf-icon.svg'
+import flower from '../assets/icons/flower-icon.svg'
+import sign from '../assets/main-sign.png'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { InputTextModal } from '../components/modal/InputTextModal'
 
 const Home = () => {
+  const [isAnswered, setIsAnswered] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [treeName, setTreeName] = useState('행복나무')
+  const [treeNameChange, setTreeNameChange] = useState(treeName)
+  const navigate = useNavigate()
+
   const treeImages = import.meta.glob('../assets/trees/사과나무*.png', {
     eager: true,
     import: 'default',
@@ -34,6 +46,38 @@ const Home = () => {
 
   const currentStage = calculateStage(answeredCount) - 1
   const remaining = calculateRemainingToNextStage(answeredCount)
+
+  const handleSignClick = () => {
+    setIsModalOpen(true)
+  }
+
+  const maxLength = 4
+  const handleConfirm = e => {
+    e.preventDefault()
+
+    if (treeNameChange.length > maxLength) {
+      return
+    } else if (treeNameChange.length <= 0) {
+      return
+    }
+    setTreeName(treeNameChange)
+    setIsModalOpen(false)
+  }
+  const handleModalClose = () => {
+    setIsModalOpen(false)
+    setTreeNameChange(treeName)
+  }
+  const handleTreeClick = () => {
+    navigate('/question/today')
+  }
+  const handleTreeNameChange = e => {
+    if (e.target.value.length <= maxLength) {
+      setTreeNameChange(e.target.value)
+    }
+  }
+  const handleLeafClick = () => {
+    navigate('/Leaves')
+  }
 
   return (
     <>
@@ -66,7 +110,50 @@ const Home = () => {
               : `다음 단계까지 ${remaining}개의 질문이 남았어요`}
           </ProgressDesc>
         </ProgressWrapper>
+        <Notification>
+          <NotificationIcon onClick={handleLeafClick}>
+            <img src={leaf} alt="잎사귀" />
+            <Counter>1</Counter>
+          </NotificationIcon>
+          <NotificationIcon>
+            <img src={flower} alt="응원꽃" />
+            <Counter>5</Counter>
+          </NotificationIcon>
+        </Notification>
+        <Tree onClick={handleTreeClick}>
+          <img src={sortedTreeImages[currentStage]} alt="나무 이미지" />
+        </Tree>
+        <SignWrapper onClick={handleSignClick}>
+          <Sign>
+            <img src={sign} alt="표지판" />
+            <div>{treeName}</div>
+          </Sign>
+        </SignWrapper>
+        <TodayQuestion>
+          {isAnswered ? (
+            <>
+              <div>오늘의 답변을 작성했어요</div>
+              <div>오늘의 기록이 내일의 나를 만들어요</div>
+            </>
+          ) : (
+            <>
+              <div>오늘의 질문이 도착했어요</div>
+              <div>나무를 클릭해서 확인하세요</div>
+            </>
+          )}
+        </TodayQuestion>
       </Container>
+      {/* <InputTextModal message={'나무 이름을 변경해주세요'} /> */}
+      {isModalOpen && (
+        <InputTextModal
+          title={'나무 이름을 입력하세요'}
+          inputText={treeNameChange}
+          onChange={handleTreeNameChange}
+          onConfirm={handleConfirm}
+          onCancel={handleModalClose}
+          maxLength={maxLength}
+        />
+      )}
     </>
   )
 }
@@ -141,7 +228,10 @@ const Level = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
   img {
+    position: absolute;
+    bottom: 0;
     width: 60%;
   }
 `
@@ -170,4 +260,99 @@ const ProgressDesc = styled.div`
   align-items: center;
   font-size: var(--fs15);
   font-weight: bold;
+  text-align: center;
+`
+const Notification = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: absolute;
+  top: 137px;
+`
+const NotificationIcon = styled.div`
+  position: relative;
+  width: 40px;
+  height: 40px;
+  img {
+    width: 40px;
+    height: 40px;
+  }
+  &:hover {
+    cursor: pointer;
+  }
+`
+const Counter = styled.div`
+  position: absolute;
+  bottom: -6px;
+  right: 0;
+  background-color: #ee6565;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: var(--fs10);
+  color: var(--color-background);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+const Tree = styled.div`
+  position: absolute;
+  bottom: 85px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  max-height: 470px;
+  display: flex;
+  justify-content: center;
+  img {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+`
+const SignWrapper = styled.div`
+  position: absolute;
+  bottom: 85px;
+  left: 62%;
+  width: 58px;
+  height: 67px;
+  display: flex;
+  padding: 1rem;
+  box-sizing: content-box;
+  &:hover {
+    cursor: pointer;
+  }
+`
+const Sign = styled.div`
+  position: relative;
+  div {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    font-size: var(--fs12);
+    text-align: center;
+  }
+`
+const TodayQuestion = styled.div`
+  width: 100%;
+  height: 65px;
+  border-radius: var(--radius-base);
+  background-color: var(--color-secondary);
+  position: absolute;
+  bottom: 10px;
+  text-align: center;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  div:nth-of-type(1) {
+    font-size: var(--fs15);
+  }
+  div:nth-of-type(2) {
+    font-size: var(--fs12);
+    color: var(--font-color-gray);
+  }
 `

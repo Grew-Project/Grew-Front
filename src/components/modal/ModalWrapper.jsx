@@ -20,4 +20,12 @@ export const ModalBox = styled.div`
   width: 90%;
   max-width: 360px;
   text-align: center;
+  position: relative;
+`
+
+export const LengthCounter = styled.div`
+  position: absolute;
+  right: 2rem;
+  font-size: var(--fs15);
+  color: var(--font-color-black);
 `

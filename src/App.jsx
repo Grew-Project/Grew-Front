@@ -8,6 +8,8 @@ import MyPage from './pages/MyPage'
 import Community from './pages/Community'
 import GlobalStyle from './styles/GlobalStyle'
 import Landing from './pages/Landing'
+import TodayQuestion from './pages/TodayQuestion'
+import Leaves from './pages/Leaves'
 import { PrivateRoute, PublicRoute } from './Routes'
 
 function App() {
@@ -20,6 +22,8 @@ function App() {
             <Route path="/home" element={<PrivateRoute element={<Home />} />} />
             <Route path="/mypage" element={<PrivateRoute element={<MyPage />} />} />
             <Route path="/community" element={<PrivateRoute element={<Community />} />} />
+            <Route path="/question/today" element={<PrivateRoute element={<TodayQuestion />} />} />
+            <Route path="/leaves" element={<PrivateRoute element={<Leaves />} />} />
           </Route>
           <Route element={<AuthLayout />}>
             <Route path="/" element={<PublicRoute element={<Landing />} />} />
