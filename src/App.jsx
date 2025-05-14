@@ -8,6 +8,7 @@ import MyPage from './pages/MyPage'
 import Community from './pages/Community'
 import GlobalStyle from './styles/GlobalStyle'
 import Landing from './pages/Landing'
+import { PrivateRoute, PublicRoute } from './Routes'
 
 function App() {
   return (
@@ -16,14 +17,14 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<Layout />}>
-            <Route path="/home" element={<Home />} />
-            <Route path="/mypage" element={<MyPage />} />
-            <Route path="/community" element={<Community />} />
+            <Route path="/home" element={<PrivateRoute element={<Home />} />} />
+            <Route path="/mypage" element={<PrivateRoute element={<MyPage />} />} />
+            <Route path="/community" element={<PrivateRoute element={<Community />} />
           </Route>
           <Route element={<AuthLayout />}>
-            <Route path="/" element={<Landing />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+            <Route path="/" element={<PublicRoute element={<Landing />} />} />
+            <Route path="/login" element={<PublicRoute element={<Login />} />} />
+            <Route path="/signup" element={<PublicRoute element={<Signup />} />} />
           </Route>
         </Routes>
       </BrowserRouter>
