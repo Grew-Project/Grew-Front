@@ -4,8 +4,12 @@ import cloud from '../assets/main-cloud.png'
 import help from '../assets/icons/main-help.svg'
 import leaf from '../assets/icons/leaf-icon.svg'
 import flower from '../assets/icons/flower-icon.svg'
+import sign from '../assets/main-sign.png'
+import { useState } from 'react'
 
 const Home = () => {
+  const [isAnswered, setIsAnswered] = useState(false)
+
   const treeImages = import.meta.glob('../assets/trees/사과나무*.png', {
     eager: true,
     import: 'default',
@@ -21,7 +25,7 @@ const Home = () => {
   const TOTAL_QUESTIONS = 16 // 총 질문 수
   const MAX_STAGE = 4 // 총 단계 수 (나무 1~4단계)
   const QUESTIONS_PER_STAGE = TOTAL_QUESTIONS / MAX_STAGE // 단계별 질문 수 = 4
-  const answeredCount = 0
+  const answeredCount = 13
 
   const calculateStage = answeredCount => {
     return Math.min(Math.floor(answeredCount / QUESTIONS_PER_STAGE) + 1, MAX_STAGE)
@@ -36,6 +40,13 @@ const Home = () => {
 
   const currentStage = calculateStage(answeredCount) - 1
   const remaining = calculateRemainingToNextStage(answeredCount)
+
+  const handleSignClick = () => {
+    console.log('표지판 누름')
+  }
+  const handleTreeClick = () => {
+    console.log('나무 누름')
+  }
 
   return (
     <>
@@ -78,9 +89,28 @@ const Home = () => {
             <Counter>5</Counter>
           </NotificationIcon>
         </Notification>
-        <Tree>
+        <Tree onClick={handleTreeClick}>
           <img src={sortedTreeImages[currentStage]} alt="나무 이미지" />
         </Tree>
+        <SignWrapper onClick={handleSignClick}>
+          <Sign>
+            <img src={sign} alt="표지판" />
+            <div>행복나무</div>
+          </Sign>
+        </SignWrapper>
+        <TodayQuestion>
+          {isAnswered ? (
+            <>
+              <div>오늘의 답변을 작성했어요</div>
+              <div>오늘의 기록이 내일의 나를 만들어요</div>
+            </>
+          ) : (
+            <>
+              <div>오늘의 질문이 도착했어요</div>
+              <div>나무를 클릭해서 확인하세요</div>
+            </>
+          )}
+        </TodayQuestion>
       </Container>
     </>
   )
@@ -233,4 +263,54 @@ const Tree = styled.div`
   max-height: 470px;
   display: flex;
   justify-content: center;
+  img {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+`
+const SignWrapper = styled.div`
+  position: absolute;
+  bottom: 85px;
+  left: 62%;
+  width: 58px;
+  height: 67px;
+  display: flex;
+  padding: 1rem;
+  box-sizing: content-box;
+  &:hover {
+    cursor: pointer;
+  }
+`
+const Sign = styled.div`
+  position: relative;
+  div {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    font-size: var(--fs12);
+    text-align: center;
+  }
+`
+const TodayQuestion = styled.div`
+  width: 100%;
+  height: 65px;
+  border-radius: var(--radius-base);
+  background-color: var(--color-secondary);
+  position: absolute;
+  bottom: 10px;
+  text-align: center;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  div:nth-of-type(1) {
+    font-size: var(--fs15);
+  }
+  div:nth-of-type(2) {
+    font-size: var(--fs12);
+    color: var(--font-color-gray);
+  }
 `
