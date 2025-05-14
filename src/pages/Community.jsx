@@ -12,8 +12,10 @@ import gobackIcon from '@/assets/icons/goback-icon.svg'
 import styled from 'styled-components'
 import { useEffect, useState } from 'react'
 import { Card } from '../components/Card'
-import { getPostList } from '../api/community'
+import { getPostList, sendFlower, sendLeaf } from '../api/community'
 import { Spinner } from '../components/Spinner'
+import { InputModal } from '../components/modal/InputModal'
+import { MessageModal } from '../components/modal/MessageModal'
 
 const menuItems = [
   { id: 'all', label: '전체' },
@@ -36,7 +38,10 @@ const Community = () => {
   const [selectedFace, setSelectedFace] = useState('all')
   const [postList, setPostList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [modalType, setModalType] = useState(null)
   const [expandedPost, setExpandedPost] = useState(null)
+  const [targetNickname, setTargetNickname] = useState('')
+  const [leafMessage, setLeafMessage] = useState('')
 
   const fetchPostList = async () => {
     try {
@@ -47,7 +52,7 @@ const Community = () => {
         setIsLoading(false)
       }, 100)
     } catch (error) {
-      console.log(error.message)
+      console.log(error.message) // 수정 예정
     }
   }
 
@@ -66,6 +71,18 @@ const Community = () => {
 
   const handleCardClick = id => {
     setExpandedPost(prev => (prev === id ? null : id))
+  }
+
+  const handleSendFlower = nickname => {
+    setTargetNickname(nickname)
+    setModalType('flower')
+    sendFlower(nickname, '정서윤') // 수정 예정
+  }
+
+  const handleSendLeaf = nickname => {
+    setTargetNickname(nickname)
+    setModalType('leaf')
+    setLeafMessage('')
   }
 
   return (
@@ -94,11 +111,13 @@ const Community = () => {
         <Spinner /> // 수정 예정
       ) : (
         filteredPosts.map(post => (
-          <Card key={post.id} onClick={() => handleCardClick(post._id)}>
+          <Card key={post._id} onClick={() => handleCardClick(post._id)}>
             <CardHeader>
               <QuestionBlock>
                 <QuestionText>{post.question_content}</QuestionText>
-                <img src={getEmotionIcon(post.emotion_type)} alt="당황" />
+                {selectedFace === 'all' && (
+                  <img src={getEmotionIcon(post.emotion_type)} alt="당황" />
+                )}
               </QuestionBlock>
               <span>{post.nickname}</span>
             </CardHeader>
@@ -106,11 +125,21 @@ const Community = () => {
               {post.answer_content}
             </AnswerPreview>
             <Buttons>
-              <button>
+              <button
+                onClick={e => {
+                  e.stopPropagation()
+                  handleSendFlower(post.nickname)
+                }}
+              >
                 <img src={flowerIcon} alt="응원꽃" />
                 <span>응원꽃 보내기</span>
               </button>
-              <button>
+              <button
+                onClick={e => {
+                  e.stopPropagation()
+                  handleSendLeaf(post.nickname)
+                }}
+              >
                 <img src={leafIcon} alt="잎사귀" />
                 <span>잎사귀 보내기</span>
               </button>
@@ -123,6 +152,33 @@ const Community = () => {
             )}
           </Card>
         ))
+      )}
+      {modalType === 'flower' && (
+        <MessageModal
+          icon={flowerIcon}
+          title={'응원꽃 보내기'}
+          text={`${targetNickname} 님에게 응원꽃을 보냈습니다!`}
+          onClose={() => setModalType(null)}
+        />
+      )}
+      {modalType === 'leaf' && (
+        <InputModal
+          icon={leafIcon}
+          title={`${targetNickname} 님에게 잎사귀 보내기`}
+          inputs={[
+            { name: 'message', placeholder: '친구에게 마음을 적어 보내보세요', multiline: true },
+          ]}
+          action="전송"
+          values={{ message: leafMessage }}
+          onChange={(name, value) => setLeafMessage(value)}
+          // onChange={setLeafMessage}
+          // onConfirm={handleSubmit}
+          onConfirm={() => {
+            sendLeaf(targetNickname, '정서윤', leafMessage) // 수정 예정
+            setModalType(null)
+          }}
+          onCancel={() => setModalType(null)}
+        />
       )}
     </>
   )
@@ -167,7 +223,6 @@ const Buttons = styled.div`
   justify-content: center;
   gap: var(--fs15);
   margin-top: var(--fs15);
-  margin-bottom: 0.6rem;
 
   button {
     display: flex;
@@ -225,6 +280,7 @@ const ProfileButton = styled.button`
   font-size: 0.85rem;
   color: #333;
   gap: 0.5rem;
+  margin-top: 0.6rem;
 
   img {
     width: 18px;
