@@ -14,8 +14,7 @@ const GlobalStyle = createGlobalStyle`
         --color-footer: #363636;
         --color-black: #000000;
         --color-white: #ffffff;
-        --color-light-gray: #d9d9d9;
-        --color-gray: #969696;
+        --color-gray: #d9d9d9;
         --color-dark-gray: #555454;
         --fs12: 12px;
         --fs15: 15px;
@@ -32,6 +31,10 @@ const GlobalStyle = createGlobalStyle`
         outline: none;
         background-color: transparent;
         cursor: pointer;
+    }
+
+    ul {
+        list-style:none;
     }
 `
 
