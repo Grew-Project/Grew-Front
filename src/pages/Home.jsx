@@ -2,6 +2,8 @@ import styled from 'styled-components'
 import grass from '../assets/main-grass.svg'
 import cloud from '../assets/main-cloud.png'
 import help from '../assets/icons/main-help.svg'
+import leaf from '../assets/icons/leaf-icon.svg'
+import flower from '../assets/icons/flower-icon.svg'
 
 const Home = () => {
   const treeImages = import.meta.glob('../assets/trees/사과나무*.png', {
@@ -66,6 +68,16 @@ const Home = () => {
               : `다음 단계까지 ${remaining}개의 질문이 남았어요`}
           </ProgressDesc>
         </ProgressWrapper>
+        <Notification>
+          <NotificationIcon>
+            <img src={leaf} alt="잎사귀" />
+            <Counter>1</Counter>
+          </NotificationIcon>
+          <NotificationIcon>
+            <img src={flower} alt="응원꽃" />
+            <Counter>5</Counter>
+          </NotificationIcon>
+        </Notification>
       </Container>
     </>
   )
@@ -170,4 +182,39 @@ const ProgressDesc = styled.div`
   align-items: center;
   font-size: var(--fs15);
   font-weight: bold;
+  text-align: center;
+`
+const Notification = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: absolute;
+  top: 137px;
+`
+const NotificationIcon = styled.div`
+  position: relative;
+  width: 40px;
+  height: 40px;
+  img {
+    width: 40px;
+    height: 40px;
+  }
+  &:hover {
+    cursor: pointer;
+  }
+`
+const Counter = styled.div`
+  position: absolute;
+  bottom: -6px;
+  right: 0;
+  background-color: #ee6565;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: var(--fs10);
+  color: var(--color-background);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
