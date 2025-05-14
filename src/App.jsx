@@ -19,7 +19,7 @@ function App() {
           <Route element={<Layout />}>
             <Route path="/home" element={<PrivateRoute element={<Home />} />} />
             <Route path="/mypage" element={<PrivateRoute element={<MyPage />} />} />
-            <Route path="/community" element={<PrivateRoute element={<Community />} />
+            <Route path="/community" element={<PrivateRoute element={<Community />} />} />
           </Route>
           <Route element={<AuthLayout />}>
             <Route path="/" element={<PublicRoute element={<Landing />} />} />
