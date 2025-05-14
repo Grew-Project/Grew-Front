@@ -19,6 +19,7 @@ const Home = () => {
   const [flowerCount, setFlowerCount] = useState(0)
   const [answeredCount, setAnsweredCount] = useState(0)
   const [treeType, setTreeType] = useState('사과나무')
+  const [isLoading, setIsLoading] = useState(true)
   const navigate = useNavigate()
 
   const treeImages = import.meta.glob(`../assets/trees/*.png`, {
@@ -105,6 +106,8 @@ const Home = () => {
         setIsAnswered(res.isAnswered)
       } catch (err) {
         console.error(err)
+      } finally {
+        setIsLoading(false)
       }
     }
 
@@ -126,52 +129,58 @@ const Home = () => {
         </Help>
         <ProgressWrapper>
           <ProgressBarWrapper>
-            <Level>
-              <img src={sortedTreeImages[currentStage]} alt="" />
-            </Level>
-            <ProgressBar remaining={remaining}></ProgressBar>
+            <Level>{!isLoading && <img src={sortedTreeImages[currentStage]} alt="" />}</Level>
+            <ProgressBar $remaining={remaining}></ProgressBar>
             <Level>
               {answeredCount < 12 && <img src={sortedTreeImages[currentStage + 1]} alt="" />}
             </Level>
           </ProgressBarWrapper>
-          <ProgressDesc>
-            {answeredCount >= 12
-              ? `나무 완성까지 ${remaining}개의 질문이 남았어요`
-              : `다음 단계까지 ${remaining}개의 질문이 남았어요`}
-          </ProgressDesc>
+          {!isLoading && (
+            <ProgressDesc>
+              {answeredCount === 16
+                ? '나무가 다 자랐어요!'
+                : answeredCount >= 12
+                  ? `나무 완성까지 ${remaining}개의 질문이 남았어요`
+                  : `다음 단계까지 ${remaining}개의 질문이 남았어요`}
+            </ProgressDesc>
+          )}
         </ProgressWrapper>
         <Notification>
           <NotificationIcon onClick={handleLeafClick}>
             <img src={leaf} alt="잎사귀" />
-            <Counter>{leafCount}</Counter>
+            {!isLoading && leafCount > 0 && <Counter>{leafCount}</Counter>}
           </NotificationIcon>
           <NotificationIcon>
             <img src={flower} alt="응원꽃" />
-            <Counter>{flowerCount}</Counter>
+            {!isLoading && flowerCount > 0 && <Counter>{flowerCount}</Counter>}
           </NotificationIcon>
         </Notification>
-        <Tree onClick={handleTreeClick}>
-          <img src={sortedTreeImages[currentStage]} alt="나무 이미지" />
-        </Tree>
+        {!isLoading && (
+          <Tree onClick={isAnswered ? undefined : handleTreeClick} $isAnswered={isAnswered}>
+            <img src={sortedTreeImages[currentStage]} alt="나무 이미지" />
+          </Tree>
+        )}
         <SignWrapper onClick={handleSignClick}>
           <Sign>
             <img src={sign} alt="표지판" />
             <div>{treeName}</div>
           </Sign>
         </SignWrapper>
-        <TodayQuestion>
-          {isAnswered ? (
-            <>
-              <div>오늘의 답변을 작성했어요</div>
-              <div>오늘의 기록이 내일의 나를 만들어요</div>
-            </>
-          ) : (
-            <>
-              <div>오늘의 질문이 도착했어요</div>
-              <div>나무를 클릭해서 확인하세요</div>
-            </>
-          )}
-        </TodayQuestion>
+        {!isLoading && (
+          <TodayQuestion>
+            {isAnswered ? (
+              <>
+                <div>오늘의 답변을 작성했어요</div>
+                <div>오늘의 기록이 내일의 나를 만들어요</div>
+              </>
+            ) : (
+              <>
+                <div>오늘의 질문이 도착했어요</div>
+                <div>나무를 클릭해서 확인하세요</div>
+              </>
+            )}
+          </TodayQuestion>
+        )}
       </Container>
       {/* <InputTextModal message={'나무 이름을 변경해주세요'} /> */}
       {isModalOpen && (
@@ -279,7 +288,7 @@ const ProgressBar = styled.div`
     left: 0;
     top: 0;
     height: 100%;
-    width: ${({ remaining }) => ((4 - remaining) / 4) * 100}%;
+    width: ${({ $remaining }) => ((4 - $remaining) / 4) * 100}%;
     background-color: #ee6565;
     transition: width 0.3s ease-in-out;
   }
@@ -337,7 +346,7 @@ const Tree = styled.div`
   justify-content: center;
   img {
     &:hover {
-      cursor: pointer;
+      cursor: ${({ $isAnswered }) => ($isAnswered ? 'default' : 'pointer')};
     }
   }
 `
