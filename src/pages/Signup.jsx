@@ -90,10 +90,9 @@ const Signup = () => {
       setIsLoading(true)
       const userData = { user_id: id, password, nickname }
       const response = await signup(userData)
-      if (response.message === '회원가입 성공') {
+      if (response.status === 201) {
         setWelcomeName(nickname)
       }
-      console.log(response)
     } catch (err) {
       if (err.message === '이미 존재하는 아이디입니다.') {
         setIdError(err.message)
