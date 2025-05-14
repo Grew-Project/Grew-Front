@@ -5,6 +5,7 @@ import Signup from './pages/Signup'
 import Layout from './layouts/CommonLayout'
 import AuthLayout from './layouts/AuthLayout'
 import MyPage from './pages/MyPage'
+import Community from './pages/Community'
 import GlobalStyle from './styles/GlobalStyle'
 import Landing from './pages/Landing'
 import { PrivateRoute, PublicRoute } from './Routes'
@@ -18,6 +19,7 @@ function App() {
           <Route element={<Layout />}>
             <Route path="/home" element={<PrivateRoute element={<Home />} />} />
             <Route path="/mypage" element={<PrivateRoute element={<MyPage />} />} />
+            <Route path="/community" element={<PrivateRoute element={<Community />} />
           </Route>
           <Route element={<AuthLayout />}>
             <Route path="/" element={<PublicRoute element={<Landing />} />} />
