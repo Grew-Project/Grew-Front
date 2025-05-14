@@ -9,8 +9,14 @@ const Row = styled.div`
 const Title = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
+
+  & > img {
+    height: 22px;
+    width: 22px;
+  }
 `
 
 export const MessageModal = ({ icon, title, text, onClose }) => {

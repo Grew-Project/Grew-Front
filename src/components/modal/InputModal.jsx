@@ -39,7 +39,21 @@ export const ErrorText = styled.p`
   padding-left: 0.2rem;
 `
 
+const Title = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+
+  & > img {
+    height: 22px;
+    width: 22px;
+  }
+`
+
 export const InputModal = ({
+  icon,
   title,
   inputs,
   errors,
@@ -52,7 +66,10 @@ export const InputModal = ({
   return (
     <ModalOverlay onClick={onCancel}>
       <ModalBox onClick={e => e.stopPropagation()}>
-        <h3>{title}</h3>
+        <Title>
+          <img src={icon} alt="아이콘" />
+          <h3>{title}</h3>
+        </Title>
         {inputs.map(input => (
           <InputWrapper key={input.name}>
             {input.multiline ? (

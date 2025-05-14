@@ -11,11 +11,12 @@ import gobackIcon from '@/assets/icons/goback-icon.svg'
 
 import styled from 'styled-components'
 import { useEffect, useState } from 'react'
-import { Card } from '../components/Card'
 import { getPostList, sendFlower, sendLeaf } from '../api/community'
 import { Spinner } from '../components/Spinner'
 import { InputModal } from '../components/modal/InputModal'
 import { MessageModal } from '../components/modal/MessageModal'
+import { ActionButton } from '../components/ActionButton'
+import { AnswerCard } from '../components/AnswerCard'
 
 const menuItems = [
   { id: 'all', label: '전체' },
@@ -111,46 +112,35 @@ const Community = () => {
         <Spinner /> // 수정 예정
       ) : (
         filteredPosts.map(post => (
-          <Card key={post._id} onClick={() => handleCardClick(post._id)}>
-            <CardHeader>
-              <QuestionBlock>
-                <QuestionText>{post.question_content}</QuestionText>
-                {selectedFace === 'all' && (
-                  <img src={getEmotionIcon(post.emotion_type)} alt="당황" />
-                )}
-              </QuestionBlock>
-              <span>{post.nickname}</span>
-            </CardHeader>
-            <AnswerPreview expanded={expandedPost === post._id}>
-              {post.answer_content}
-            </AnswerPreview>
+          <AnswerCard
+            key={post._id}
+            post={post}
+            onCardClick={() => handleCardClick(post._id)}
+            isExpanded={expandedPost === post._id}
+            emotionIcon={getEmotionIcon(post.emotion_type)}
+          >
             <Buttons>
-              <button
-                onClick={e => {
-                  e.stopPropagation()
-                  handleSendFlower(post.nickname)
-                }}
-              >
-                <img src={flowerIcon} alt="응원꽃" />
-                <span>응원꽃 보내기</span>
-              </button>
-              <button
-                onClick={e => {
-                  e.stopPropagation()
-                  handleSendLeaf(post.nickname)
-                }}
-              >
-                <img src={leafIcon} alt="잎사귀" />
-                <span>잎사귀 보내기</span>
-              </button>
+              <ActionButton
+                icon={flowerIcon}
+                text="응원꽃 보내기"
+                onClick={() => handleSendFlower(post.nickname)}
+              />
+              <ActionButton
+                icon={leafIcon}
+                text="잎사귀 보내기"
+                onClick={() => handleSendLeaf(post.nickname)}
+              />
             </Buttons>
             {expandedPost === post._id && (
               <ProfileButton>
-                <img src={profileIcon} alt="프로필" />
-                <span>프로필 가기</span>
+                <ActionButton
+                  icon={profileIcon}
+                  text="프로필 가기"
+                  // onClick={}
+                />
               </ProfileButton>
             )}
-          </Card>
+          </AnswerCard>
         ))
       )}
       {modalType === 'flower' && (
@@ -171,8 +161,6 @@ const Community = () => {
           action="전송"
           values={{ message: leafMessage }}
           onChange={(name, value) => setLeafMessage(value)}
-          // onChange={setLeafMessage}
-          // onConfirm={handleSubmit}
           onConfirm={() => {
             sendLeaf(targetNickname, '정서윤', leafMessage) // 수정 예정
             setModalType(null)
@@ -234,58 +222,15 @@ const Buttons = styled.div`
 
   button > img {
     margin-right: 5px;
+    height: 17px;
+    width: 17px;
   }
-`
-
-const CardHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.75rem;
-  font-weight: bold;
-`
-
-const QuestionBlock = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-`
-
-const QuestionText = styled.div`
-  color: var(--color-primary);
-  margin-right: 0.3rem;
-`
-
-const AnswerPreview = styled.p`
-  font-size: 0.9rem;
-  line-height: 1.4;
-  margin: 0 0 1rem;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  ${({ expanded }) => (expanded ? '' : '-webkit-line-clamp: 2;')}
 `
 
 const ProfileButton = styled.button`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--color-gray);
-  background-color: white;
-  border-radius: 999px;
-  padding: 0.4rem 1rem;
   margin: auto;
-  font-size: 0.85rem;
-  color: #333;
-  gap: 0.5rem;
   margin-top: 0.6rem;
-
-  img {
-    width: 18px;
-    height: 18px;
-  }
 `
 
 const Header = styled.div`
