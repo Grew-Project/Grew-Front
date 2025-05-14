@@ -2,16 +2,18 @@ import React, { useState } from 'react'
 import logo from '../assets/logo.svg'
 import styled from 'styled-components'
 import { Button } from '../components/Button'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Input } from '../components/Input'
 import goback from '../assets/icons/goback-icon.svg'
 import { Spinner } from '../components/Spinner'
+import { login } from '../api/auth'
 
 const Login = () => {
   const [id, setId] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
   const handleIdChange = e => {
     setId(e.target.value)
@@ -37,14 +39,21 @@ const Login = () => {
       return
     }
 
-    console.log('아이디:', id)
-    console.log('비밀번호:', password)
     try {
       setIsLoading(true)
-      await new Promise(resolve => setTimeout(resolve, 1000)) // 예시용 지연
-      setError('아이디 또는 비밀번호가 일치하지 않아요')
-    } catch (error) {
-      setError('아이디 또는 비밀번호가 일치하지 않아요')
+      const userData = { user_id: id, password }
+      const response = await login(userData)
+      if (response.message === '로그인 성공') {
+        navigate('/home')
+        localStorage.setItem('token', response.token)
+      }
+    } catch (err) {
+      if (
+        err.message === '비밀번호가 일치하지 않습니다.' ||
+        err.message === '존재하지 않는 아이디입니다.'
+      ) {
+        setError('아이디 또는 비밀번호가 일치하지 않아요')
+      }
     } finally {
       setIsLoading(false)
     }

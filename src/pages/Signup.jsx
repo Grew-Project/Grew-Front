@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import { Input } from '../components/Input'
 import goback from '../assets/icons/goback-icon.svg'
 import { Spinner } from '../components/Spinner'
+import { signup } from '../api/auth'
 
 const Signup = () => {
   const [id, setId] = useState('')
@@ -17,6 +18,7 @@ const Signup = () => {
   const [passwordConfirmError, setPasswordConfirmError] = useState('')
   const [nicknameError, setNicknameError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [welcomeName, setWelcomeName] = useState('')
 
   const handleIdChange = e => {
     if (e.target.value.length <= 16) {
@@ -75,17 +77,22 @@ const Signup = () => {
     }
     if (hasError) return
 
-    console.log('아이디:', id)
-    console.log('비밀번호:', password)
-    console.log('닉네임:', nickname)
-
     try {
       setIsLoading(true)
-      await new Promise(resolve => setTimeout(resolve, 1000)) // 예시용 지연
-      setIdError('이미 사용 중인 아이디에요')
-      setNicknameError('이미 사용 중인 닉네임이에요')
-    } catch (error) {
-      setIdError('아이디 또는 비밀번호가 일치하지 않아요')
+      const userData = { user_id: id, password, nickname }
+      const response = await signup(userData)
+      if (response.message === '회원가입 성공') {
+        setWelcomeName(nickname)
+      }
+      console.log(response)
+    } catch (err) {
+      if (err.message === '이미 존재하는 아이디입니다.') {
+        setIdError(err.message)
+      } else if (err.message === '이미 사용 중인 닉네임입니다.') {
+        setNicknameError(err.message)
+      } else {
+        setNicknameError('잠시 후 다시 시도해주세요')
+      }
     } finally {
       setIsLoading(false)
     }
@@ -97,45 +104,54 @@ const Signup = () => {
         <img src={goback} alt="back" />
       </Back>
       <img src={logo} alt="Logo" />
-      <StyledForm onSubmit={handleLoginClick}>
-        <InputContainer>
-          <InputWrapper>
-            <Input placeholder="아이디" value={id} onChange={handleIdChange} />
-          </InputWrapper>
-          <ErrorText>{idError && idError}&nbsp;</ErrorText>
-          <InputWrapper>
-            <Input
-              placeholder="비밀번호"
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-            />
-          </InputWrapper>
-          <ErrorText>{passwordError && passwordError}&nbsp;</ErrorText>
-          <InputWrapper>
-            <Input
-              placeholder="비밀번호 확인"
-              type="password"
-              value={passwordConfirm}
-              onChange={handlePasswordConfirmChange}
-            />
-          </InputWrapper>
-          <ErrorText>{passwordConfirmError && passwordConfirmError}&nbsp;</ErrorText>
-          <InputWrapper>
-            <Input placeholder="닉네임" value={nickname} onChange={handleNicknameChange} />
-          </InputWrapper>
-          <ErrorText>{nicknameError && nicknameError}&nbsp;</ErrorText>
-        </InputContainer>
-        <ButtonWrapper>
-          <Button primary height="48px" type="submit" disabled={isLoading}>
-            {isLoading ? <Spinner /> : '회원가입'}
-          </Button>
-        </ButtonWrapper>
-      </StyledForm>
-      <GotoLoginWrapper>
-        <div>이미 계정이 있으신가요?</div>
-        <GotoLogin to="/login">&nbsp;로그인</GotoLogin>
-      </GotoLoginWrapper>
+      {welcomeName ? (
+        <Welcome>
+          <div>{nickname}님 안녕하세요</div>
+          <GotoLogin to="/login">로그인하러가기</GotoLogin>
+        </Welcome>
+      ) : (
+        <>
+          <StyledForm onSubmit={handleLoginClick}>
+            <InputContainer>
+              <InputWrapper>
+                <Input placeholder="아이디" value={id} onChange={handleIdChange} />
+              </InputWrapper>
+              <ErrorText>{idError && idError}&nbsp;</ErrorText>
+              <InputWrapper>
+                <Input
+                  placeholder="비밀번호"
+                  type="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                />
+              </InputWrapper>
+              <ErrorText>{passwordError && passwordError}&nbsp;</ErrorText>
+              <InputWrapper>
+                <Input
+                  placeholder="비밀번호 확인"
+                  type="password"
+                  value={passwordConfirm}
+                  onChange={handlePasswordConfirmChange}
+                />
+              </InputWrapper>
+              <ErrorText>{passwordConfirmError && passwordConfirmError}&nbsp;</ErrorText>
+              <InputWrapper>
+                <Input placeholder="닉네임" value={nickname} onChange={handleNicknameChange} />
+              </InputWrapper>
+              <ErrorText>{nicknameError && nicknameError}&nbsp;</ErrorText>
+            </InputContainer>
+            <ButtonWrapper>
+              <Button primary height="48px" type="submit" disabled={isLoading}>
+                {isLoading ? <Spinner /> : '회원가입'}
+              </Button>
+            </ButtonWrapper>
+          </StyledForm>
+          <GotoLoginWrapper>
+            <div>이미 계정이 있으신가요?</div>
+            <GotoLogin to="/login">&nbsp;로그인</GotoLogin>
+          </GotoLoginWrapper>
+        </>
+      )}
     </Container>
   )
 }
@@ -150,6 +166,15 @@ const Container = styled.div`
   height: 100%;
   color: var(--color-primary);
   position: relative;
+`
+const Welcome = styled.div`
+  font-size: var(--fs20);
+  text-align: center;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
 `
 const Back = styled(Link)`
   position: absolute;
