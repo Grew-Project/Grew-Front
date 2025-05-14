@@ -45,9 +45,10 @@ const Login = () => {
       setIsLoading(true)
       const userData = { user_id: id, password }
       const response = await login(userData)
-      if (response.message === '로그인 성공') {
+      if (response.status === 200) {
         navigate('/home')
-        setLoginState(response.token)
+        setLoginState(response.data.token, id, response.data.nickname)
+        console.log(response.data)
       }
     } catch (err) {
       if (

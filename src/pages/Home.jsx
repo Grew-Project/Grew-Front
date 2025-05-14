@@ -5,25 +5,33 @@ import help from '../assets/icons/main-help.svg'
 import leaf from '../assets/icons/leaf-icon.svg'
 import flower from '../assets/icons/flower-icon.svg'
 import sign from '../assets/main-sign.png'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { InputTextModal } from '../components/modal/InputTextModal'
+import { getHomeInfo, updateTreeName } from '../api/home'
 
 const Home = () => {
   const [isAnswered, setIsAnswered] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [treeName, setTreeName] = useState('행복나무')
+  const [treeName, setTreeName] = useState('')
   const [treeNameChange, setTreeNameChange] = useState(treeName)
+  const [leafCount, setLeafCount] = useState(0)
+  const [flowerCount, setFlowerCount] = useState(0)
+  const [answeredCount, setAnsweredCount] = useState(0)
+  const [treeType, setTreeType] = useState('사과나무')
+  const [isLoading, setIsLoading] = useState(true)
   const navigate = useNavigate()
 
-  const treeImages = import.meta.glob('../assets/trees/사과나무*.png', {
+  const treeImages = import.meta.glob(`../assets/trees/*.png`, {
     eager: true,
     import: 'default',
   })
   const sortedTreeImages = Object.entries(treeImages)
+    .filter(([path]) => path.includes(treeType))
     .sort(([a], [b]) => {
-      const numA = parseInt(a.match(/사과나무(\d+)/)[1])
-      const numB = parseInt(b.match(/사과나무(\d+)/)[1])
+      const regex = new RegExp(`${treeType}(\\d+)`)
+      const numA = parseInt(a.match(regex)?.[1] || '0')
+      const numB = parseInt(b.match(regex)?.[1] || '0')
       return numA - numB
     })
     .map(([, value]) => value)
@@ -31,7 +39,6 @@ const Home = () => {
   const TOTAL_QUESTIONS = 16 // 총 질문 수
   const MAX_STAGE = 4 // 총 단계 수 (나무 1~4단계)
   const QUESTIONS_PER_STAGE = TOTAL_QUESTIONS / MAX_STAGE // 단계별 질문 수 = 4
-  const answeredCount = 0
 
   const calculateStage = answeredCount => {
     return Math.min(Math.floor(answeredCount / QUESTIONS_PER_STAGE) + 1, MAX_STAGE)
@@ -52,16 +59,22 @@ const Home = () => {
   }
 
   const maxLength = 4
-  const handleConfirm = e => {
+  const handleConfirm = async e => {
     e.preventDefault()
 
-    if (treeNameChange.length > maxLength) {
-      return
-    } else if (treeNameChange.length <= 0) {
+    if (treeNameChange.length > maxLength || treeNameChange.length <= 0) {
       return
     }
-    setTreeName(treeNameChange)
-    setIsModalOpen(false)
+
+    try {
+      const response = await updateTreeName(treeNameChange)
+      if (response.status === 200) {
+        setTreeName(treeNameChange)
+        setIsModalOpen(false)
+      }
+    } catch (err) {
+      console.error(err)
+    }
   }
   const handleModalClose = () => {
     setIsModalOpen(false)
@@ -79,6 +92,28 @@ const Home = () => {
     navigate('/Leaves')
   }
 
+  //api 연동
+  useEffect(() => {
+    const fetchHomeInfo = async () => {
+      try {
+        const res = await getHomeInfo()
+        setAnsweredCount(res.answerCount)
+        setLeafCount(res.leafCount)
+        setFlowerCount(res.flowerCount)
+        setTreeType(res.treeType)
+        setTreeName(res.treeName)
+        setTreeNameChange(res.treeName)
+        setIsAnswered(res.isAnswered)
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchHomeInfo()
+  }, [])
+
   return (
     <>
       <Background>
@@ -94,54 +129,58 @@ const Home = () => {
         </Help>
         <ProgressWrapper>
           <ProgressBarWrapper>
+            <Level>{!isLoading && <img src={sortedTreeImages[currentStage]} alt="" />}</Level>
+            <ProgressBar $remaining={remaining}></ProgressBar>
             <Level>
-              <img src={sortedTreeImages[currentStage]} alt={`나무 이미지`} />
-            </Level>
-            <ProgressBar remaining={remaining}></ProgressBar>
-            <Level>
-              {answeredCount < 12 && (
-                <img src={sortedTreeImages[currentStage + 1]} alt={`나무 이미지`} />
-              )}
+              {answeredCount < 12 && <img src={sortedTreeImages[currentStage + 1]} alt="" />}
             </Level>
           </ProgressBarWrapper>
-          <ProgressDesc>
-            {answeredCount >= 12
-              ? `나무 완성까지 ${remaining}개의 질문이 남았어요`
-              : `다음 단계까지 ${remaining}개의 질문이 남았어요`}
-          </ProgressDesc>
+          {!isLoading && (
+            <ProgressDesc>
+              {answeredCount === 16
+                ? '나무가 다 자랐어요!'
+                : answeredCount >= 12
+                  ? `나무 완성까지 ${remaining}개의 질문이 남았어요`
+                  : `다음 단계까지 ${remaining}개의 질문이 남았어요`}
+            </ProgressDesc>
+          )}
         </ProgressWrapper>
         <Notification>
           <NotificationIcon onClick={handleLeafClick}>
             <img src={leaf} alt="잎사귀" />
-            <Counter>1</Counter>
+            {!isLoading && leafCount > 0 && <Counter>{leafCount}</Counter>}
           </NotificationIcon>
           <NotificationIcon>
             <img src={flower} alt="응원꽃" />
-            <Counter>5</Counter>
+            {!isLoading && flowerCount > 0 && <Counter>{flowerCount}</Counter>}
           </NotificationIcon>
         </Notification>
-        <Tree onClick={handleTreeClick}>
-          <img src={sortedTreeImages[currentStage]} alt="나무 이미지" />
-        </Tree>
+        {!isLoading && (
+          <Tree onClick={isAnswered ? undefined : handleTreeClick} $isAnswered={isAnswered}>
+            <img src={sortedTreeImages[currentStage]} alt="나무 이미지" />
+          </Tree>
+        )}
         <SignWrapper onClick={handleSignClick}>
           <Sign>
             <img src={sign} alt="표지판" />
             <div>{treeName}</div>
           </Sign>
         </SignWrapper>
-        <TodayQuestion>
-          {isAnswered ? (
-            <>
-              <div>오늘의 답변을 작성했어요</div>
-              <div>오늘의 기록이 내일의 나를 만들어요</div>
-            </>
-          ) : (
-            <>
-              <div>오늘의 질문이 도착했어요</div>
-              <div>나무를 클릭해서 확인하세요</div>
-            </>
-          )}
-        </TodayQuestion>
+        {!isLoading && (
+          <TodayQuestion>
+            {isAnswered ? (
+              <>
+                <div>오늘의 답변을 작성했어요</div>
+                <div>오늘의 기록이 내일의 나를 만들어요</div>
+              </>
+            ) : (
+              <>
+                <div>오늘의 질문이 도착했어요</div>
+                <div>나무를 클릭해서 확인하세요</div>
+              </>
+            )}
+          </TodayQuestion>
+        )}
       </Container>
       {/* <InputTextModal message={'나무 이름을 변경해주세요'} /> */}
       {isModalOpen && (
@@ -249,7 +288,7 @@ const ProgressBar = styled.div`
     left: 0;
     top: 0;
     height: 100%;
-    width: ${({ remaining }) => ((4 - remaining) / 4) * 100}%;
+    width: ${({ $remaining }) => ((4 - $remaining) / 4) * 100}%;
     background-color: #ee6565;
     transition: width 0.3s ease-in-out;
   }
@@ -307,7 +346,7 @@ const Tree = styled.div`
   justify-content: center;
   img {
     &:hover {
-      cursor: pointer;
+      cursor: ${({ $isAnswered }) => ($isAnswered ? 'default' : 'pointer')};
     }
   }
 `
