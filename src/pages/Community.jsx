@@ -116,7 +116,7 @@ const Community = () => {
               <QuestionBlock>
                 <QuestionText>{post.question_content}</QuestionText>
                 {selectedFace === 'all' && (
-                  <img src={getEmotionIcon(post.emotion_type)} alt="당황" />
+                  <img src={getEmotionIcon(post.emotion_type)} alt={post.emotion_type} />
                 )}
               </QuestionBlock>
               <span>{post.nickname}</span>
@@ -234,6 +234,8 @@ const Buttons = styled.div`
 
   button > img {
     margin-right: 5px;
+    height: 17px;
+    width: 17px;
   }
 `
 
