@@ -75,6 +75,9 @@ const Home = () => {
       setTreeNameChange(e.target.value)
     }
   }
+  const handleLeafClick = () => {
+    navigate('/Leaves')
+  }
 
   return (
     <>
@@ -108,7 +111,7 @@ const Home = () => {
           </ProgressDesc>
         </ProgressWrapper>
         <Notification>
-          <NotificationIcon>
+          <NotificationIcon onClick={handleLeafClick}>
             <img src={leaf} alt="잎사귀" />
             <Counter>1</Counter>
           </NotificationIcon>

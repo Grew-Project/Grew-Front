@@ -8,6 +8,7 @@ import MyPage from './pages/MyPage'
 import GlobalStyle from './styles/GlobalStyle'
 import Landing from './pages/Landing'
 import TodayQuestion from './pages/TodayQuestion'
+import Leaves from './pages/Leaves'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/question/today" element={<TodayQuestion />} />
+            <Route path="/leaves" element={<Leaves />} />
           </Route>
           <Route element={<AuthLayout />}>
             <Route path="/" element={<Landing />} />
