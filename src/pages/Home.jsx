@@ -31,7 +31,7 @@ const Home = () => {
   const TOTAL_QUESTIONS = 16 // 총 질문 수
   const MAX_STAGE = 4 // 총 단계 수 (나무 1~4단계)
   const QUESTIONS_PER_STAGE = TOTAL_QUESTIONS / MAX_STAGE // 단계별 질문 수 = 4
-  const answeredCount = 13
+  const answeredCount = 0
 
   const calculateStage = answeredCount => {
     return Math.min(Math.floor(answeredCount / QUESTIONS_PER_STAGE) + 1, MAX_STAGE)
