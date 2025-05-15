@@ -34,3 +34,19 @@ export const createTodayAnswer = async (question_id, answer_content, emotion_typ
     console.error(error)
   }
 }
+
+export const getQuestionCount = async () => {
+  const nickname = useAuthStore.getState().nickname
+  try {
+    const response = await axios.get(`${BASE_URL}/api/mypage/my-answer-list`, {
+      params: {
+        nickname,
+      },
+    })
+    // console.log(response.data)
+
+    return response
+  } catch (error) {
+    console.error(error)
+  }
+}
