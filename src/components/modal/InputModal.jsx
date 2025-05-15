@@ -67,7 +67,7 @@ export const InputModal = ({
     <ModalOverlay onClick={onCancel}>
       <ModalBox onClick={e => e.stopPropagation()}>
         <Title>
-          <img src={icon} alt="아이콘" />
+          {icon && <img src={icon} alt="아이콘" />}
           <h3>{title}</h3>
         </Title>
         {inputs.map(input => (

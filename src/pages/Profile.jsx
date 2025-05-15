@@ -8,8 +8,9 @@ import { InputModal } from '../components/modal/InputModal'
 import { MessageModal } from '../components/modal/MessageModal'
 import styled from 'styled-components'
 import { AnswerCard } from '../components/AnswerCard'
-import leftIcon from '@/assets/icons/goback-icon.svg'
+import nextIcon from '@/assets/icons/next-icon.svg'
 import { Spinner } from '../components/Spinner'
+import TitleListItem from '../components/TitleListItem'
 
 export const Profile = () => {
   const { nickname } = useParams()
@@ -85,15 +86,13 @@ export const Profile = () => {
           }
 
           return (
-            <CollapsedCard key={post.created_at} onClick={() => setExpandedPost(post.created_at)}>
-              <CollapsedHeader>
-                <CollapsedQuestion>
-                  <span>{post.question_content}</span>
-                  {/* <img src={getEmotionIcon(post.emotion_type)} alt="감정" /> */}
-                </CollapsedQuestion>
-                <ArrowIcon src={leftIcon} style={{ transform: 'rotate(180deg)' }} alt="화살표" />
-              </CollapsedHeader>
-            </CollapsedCard>
+            <TitleListItem
+              primary
+              key={post.created_at}
+              onItemClick={() => setExpandedPost(post.created_at)}
+              title={post.question_content}
+              icon={nextIcon}
+            />
           )
         })
       )}
@@ -144,33 +143,4 @@ const Buttons = styled.div`
     height: 17px;
     width: 17px;
   }
-`
-
-const CollapsedCard = styled.div`
-  border: 1px solid transparent;
-  border-radius: 8px;
-  cursor: pointer;
-`
-
-const CollapsedHeader = styled.div`
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`
-
-const CollapsedQuestion = styled.div`
-  display: flex;
-  font-weight: bold;
-  color: var(--color-primary);
-
-  img {
-    width: 20px;
-    height: 20px;
-  }
-`
-
-const ArrowIcon = styled.img`
-  width: 20px;
-  height: 20px;
 `
