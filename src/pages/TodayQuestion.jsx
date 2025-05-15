@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
-import { Button } from '../components/Button'
 import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
+
+import { createTodayAnswer, getTodayQuestion } from '../api/today_question'
+import { Button } from '../components/Button'
+import { Textarea } from '../components/TextArea'
 
 import angerFace from '../assets/faces/anger-face.svg'
 import confusionFace from '../assets/faces/confusion-face.svg'
@@ -9,51 +12,78 @@ import happinessFace from '../assets/faces/happiness-face.svg'
 import loveFace from '../assets/faces/love-face.svg'
 import sadnessFace from '../assets/faces/sadness-face.svg'
 import goBack from '../assets/icons/goback-icon.svg'
-import { Input } from '../components/Input'
-import { Textarea } from '../components/TextArea'
 import checkBoxIcon from '../assets/icons/checkbox-icon.svg'
+import { Spinner } from '../components/Spinner'
 
 const TodayQuestion = () => {
   const [currentStep, setCurrentStep] = useState('selectEmotion') //enterQuestion
   const [formData, setFormData] = useState({
+    questionId: 0,
     emotionType: '',
     answerContent: '',
     isPrivate: false,
   })
-  let todayQuestion = '행복을 음식, 향기, 풍경으로 표현한다면?'
+  const [todayQuestion, setTodayQuestion] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
 
   const today = new Date()
   const formattedDate = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`
 
-  const handleNext = e => {
-    e.preventDefault()
-    if (currentStep === 'selectEmotion') {
-      setCurrentStep('enterQuestion')
-    } else {
-      console.log(formData)
-      console.log('제출')
-    }
-  }
   const handlePrev = () => {
     if (currentStep === 'selectEmotion') {
       navigate('/home')
     }
     setCurrentStep('selectEmotion')
   }
+  const handleNext = async e => {
+    e.preventDefault()
+    if (currentStep === 'selectEmotion') {
+      try {
+        const response = await getTodayQuestion(formData.emotionType)
+        setTodayQuestion(response.question_content)
+        setFormData(prev => ({
+          ...prev,
+          questionId: response.question_id,
+        }))
+        console.log(response)
+      } catch (err) {
+        console.error(err)
+      }
+      setCurrentStep('enterQuestion')
+    } else if (currentStep === 'enterQuestion') {
+      try {
+        setIsLoading(true)
+        const response = await createTodayAnswer(
+          formData.questionId,
+          formData.answerContent,
+          formData.emotionType,
+          !formData.isPrivate
+        )
+        if (response.status === 201) {
+          navigate('/home')
+        }
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+  }
+
   const handleChange = e => {
     setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value,
     }))
   }
-  const emotions = ['당황', '화남', '기쁨', '슬픔', '행복']
+  const emotions = ['Confusion', 'Anger', 'Happiness', 'Sadness', 'Love']
   const emotionImages = {
-    기쁨: happinessFace,
-    슬픔: sadnessFace,
-    화남: angerFace,
-    당황: confusionFace,
-    행복: loveFace,
+    Happiness: happinessFace,
+    Sadness: sadnessFace,
+    Anger: angerFace,
+    Confusion: confusionFace,
+    Love: loveFace,
   }
   const handleEmotionChange = emotion => {
     setFormData(prev => ({
@@ -82,7 +112,7 @@ const TodayQuestion = () => {
               </EmotionContainer>
               <ButtonWrapper>
                 <Button type="submit" disabled={formData.emotionType === ''}>
-                  {currentStep === 'selectEmotion' ? '다음으로' : '오늘의 나 기록하기'}
+                  다음으로
                 </Button>
               </ButtonWrapper>
             </StyledEmotionForm>
@@ -128,8 +158,8 @@ const TodayQuestion = () => {
                 </label>
               </CheckBoxWrapper>
               <ButtonWrapper>
-                <Button type="submit" disabled={formData.answerContent === ''}>
-                  {currentStep === 'selectEmotion' ? '다음으로' : '오늘의 나 기록하기'}
+                <Button type="submit" disabled={formData.answerContent === '' || isLoading}>
+                  {isLoading ? <Spinner /> : '오늘의 나 기록하기'}
                 </Button>
               </ButtonWrapper>
             </StyledAnswerForm>

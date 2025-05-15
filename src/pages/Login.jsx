@@ -48,7 +48,6 @@ const Login = () => {
       if (response.status === 200) {
         navigate('/home')
         setLoginState(response.data.token, id, response.data.nickname)
-        console.log(response.data)
       }
     } catch (err) {
       if (
