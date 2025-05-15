@@ -18,6 +18,7 @@ import { MessageModal } from '../components/modal/MessageModal'
 import { ActionButton } from '../components/ActionButton'
 import { AnswerCard } from '../components/AnswerCard'
 import { useNavigate } from 'react-router-dom'
+import useAuthStore from '../store/useAuthStore'
 
 const menuItems = [
   { id: 'all', label: '전체' },
@@ -45,6 +46,8 @@ const Community = () => {
   const [targetNickname, setTargetNickname] = useState('')
   const [leafMessage, setLeafMessage] = useState('')
   const navigate = useNavigate()
+
+  const nickname = useAuthStore(state => state.nickname)
 
   const fetchPostList = async () => {
     try {
@@ -76,14 +79,14 @@ const Community = () => {
     setExpandedPost(prev => (prev === id ? null : id))
   }
 
-  const handleSendFlower = nickname => {
-    setTargetNickname(nickname)
+  const handleSendFlower = targetNickname => {
+    setTargetNickname(targetNickname)
     setModalType('flower')
-    sendFlower(nickname, '정서윤') // 수정 예정
+    sendFlower(targetNickname, nickname)
   }
 
-  const handleSendLeaf = nickname => {
-    setTargetNickname(nickname)
+  const handleSendLeaf = targetNickname => {
+    setTargetNickname(targetNickname)
     setModalType('leaf')
     setLeafMessage('')
   }
@@ -165,7 +168,7 @@ const Community = () => {
           values={{ message: leafMessage }}
           onChange={(name, value) => setLeafMessage(value)}
           onConfirm={() => {
-            sendLeaf(targetNickname, '정서윤', leafMessage) // 수정 예정
+            sendLeaf(targetNickname, nickname, leafMessage)
             setModalType(null)
           }}
           onCancel={() => setModalType(null)}

@@ -43,7 +43,7 @@ const TitleListItem = ({ onItemClick, title, icon, ...props }) => {
           <span>{title}</span>
           {/* <img src={getEmotionIcon(post.emotion_type)} alt="감정" /> */}
         </CollapsedTitle>
-        <Icon src={icon} alt="아이콘" />
+        {icon && <Icon src={icon} alt="아이콘" />}
       </CollapsedHeader>
     </CollapsedCard>
   )

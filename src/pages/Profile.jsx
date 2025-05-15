@@ -11,9 +11,12 @@ import { AnswerCard } from '../components/AnswerCard'
 import nextIcon from '@/assets/icons/next-icon.svg'
 import { Spinner } from '../components/Spinner'
 import TitleListItem from '../components/TitleListItem'
+import useAuthStore from '../store/useAuthStore'
 
 export const Profile = () => {
-  const { nickname } = useParams()
+  const nickname = useAuthStore(state => state.nickname)
+
+  const { profileNickname } = useParams()
 
   const [isLoading, setIsLoading] = useState(false)
   const [leafMessage, setLeafMessage] = useState('')
@@ -24,7 +27,7 @@ export const Profile = () => {
   const fetchUserAnswers = async () => {
     try {
       setIsLoading(true)
-      const data = await getUserAnswers(nickname)
+      const data = await getUserAnswers(profileNickname)
       setPostList(data)
       console.log(data)
       setTimeout(() => {
@@ -36,12 +39,12 @@ export const Profile = () => {
   }
 
   useEffect(() => {
-    fetchUserAnswers(nickname)
+    fetchUserAnswers(profileNickname)
   }, [])
 
   const handleSendFlower = () => {
     setModalType('flower')
-    sendFlower(nickname, '정서윤') // 수정 예정
+    sendFlower(profileNickname, nickname)
   }
 
   const handleSendLeaf = () => {
@@ -49,21 +52,19 @@ export const Profile = () => {
     setLeafMessage('')
   }
 
-  useEffect(() => {}, [nickname])
-
   return (
     <div>
-      <Name>{nickname}</Name>
+      <Name>{profileNickname}</Name>
       <Buttons>
         <ActionButton
           icon={flowerIcon}
           text="응원꽃 보내기"
-          onClick={() => handleSendFlower(nickname)}
+          onClick={() => handleSendFlower(profileNickname)}
         />
         <ActionButton
           icon={leafIcon}
           text="잎사귀 보내기"
-          onClick={() => handleSendLeaf(nickname)}
+          onClick={() => handleSendLeaf(profileNickname)}
         />
       </Buttons>
       {isLoading ? (
@@ -101,14 +102,14 @@ export const Profile = () => {
         <MessageModal
           icon={flowerIcon}
           title={'응원꽃 보내기'}
-          text={`${nickname} 님에게 응원꽃을 보냈습니다!`}
+          text={`${profileNickname} 님에게 응원꽃을 보냈습니다!`}
           onClose={() => setModalType(null)}
         />
       )}
       {modalType === 'leaf' && (
         <InputModal
           icon={leafIcon}
-          title={`${nickname} 님에게 잎사귀 보내기`}
+          title={`${profileNickname} 님에게 잎사귀 보내기`}
           inputs={[
             { name: 'message', placeholder: '친구에게 마음을 적어 보내보세요', multiline: true },
           ]}
@@ -116,7 +117,7 @@ export const Profile = () => {
           values={{ message: leafMessage }}
           onChange={(name, value) => setLeafMessage(value)}
           onConfirm={() => {
-            sendLeaf(nickname, '정서윤', leafMessage) // 수정 예정
+            sendLeaf(profileNickname, nickname, leafMessage)
             setModalType(null)
           }}
           onCancel={() => setModalType(null)}

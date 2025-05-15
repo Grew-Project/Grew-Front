@@ -10,8 +10,7 @@ import useAuthStore from '../store/useAuthStore'
 const MyPage = () => {
   const logout = useAuthStore(state => state.logout)
 
-  const nickname = '테스트' // 임시 데이터
-  const userId = 'test123' // 임시 데이터
+  const userId = useAuthStore(state => state.userId)
 
   const [modalType, setModalType] = useState(null)
   const navigate = useNavigate()
@@ -19,7 +18,7 @@ const MyPage = () => {
   const [pwErrors, setPwErrors] = useState({})
 
   const menuList = [
-    { name: '내 답변 리스트', route: '/answers' },
+    { name: '내 답변 리스트', route: '/my-answers' },
     { name: '마음숲/감정리포트', route: '/forest' },
     { name: '비밀번호 변경', modalType: 'password' },
     { name: '고객센터', route: 'support' },
@@ -87,7 +86,7 @@ const MyPage = () => {
     logout()
     setModalType(null)
   }
-  
+
   return (
     <div>
       {menuList.map((menu, index) => (

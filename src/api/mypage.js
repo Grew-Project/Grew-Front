@@ -7,9 +7,7 @@ export const getMyAnswers = async nickname => {
     const body = { nickname: nickname }
     console.log(body)
     const response = await axios.get(`${BASE_URL}/api/mypage/my-answer-search?nickname=${nickname}`)
-    return response.data.filter(post => {
-      return post.is_public
-    })
+    return response.data
   } catch (error) {
     console.log(error.message)
   }
