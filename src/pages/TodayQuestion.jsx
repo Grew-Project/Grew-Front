@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { createTodayAnswer, getTodayQuestion } from '../api/today_question'
+import { createTodayAnswer, getQuestionCount, getTodayQuestion } from '../api/today_question'
 import { Button } from '../components/Button'
 import { Textarea } from '../components/TextArea'
 
@@ -24,6 +24,7 @@ const TodayQuestion = () => {
     isPrivate: false,
   })
   const [todayQuestion, setTodayQuestion] = useState('')
+  const [questionCount, setQuestionCount] = useState()
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
 
@@ -46,7 +47,6 @@ const TodayQuestion = () => {
           ...prev,
           questionId: response.question_id,
         }))
-        console.log(response)
       } catch (err) {
         console.error(err)
       }
@@ -91,6 +91,23 @@ const TodayQuestion = () => {
       emotionType: emotion,
     }))
   }
+
+  useEffect(() => {
+    const fetchQuestionCount = async () => {
+      try {
+        const res = await getQuestionCount()
+        if (res.status === 200) {
+          const count = String(res.data.length).padStart(1, '0')
+          setQuestionCount(count + 1)
+        }
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    fetchQuestionCount()
+  }, [])
+
   const renderInput = () => {
     switch (currentStep) {
       case 'selectEmotion':
@@ -176,7 +193,7 @@ const TodayQuestion = () => {
         <img src={goBack} alt="back" />
       </Back>
       <PageTitle>
-        <div>#00</div>
+        <div>#{questionCount}</div>
         <div>번째 질문</div>
         <div>{formattedDate}</div>
       </PageTitle>
