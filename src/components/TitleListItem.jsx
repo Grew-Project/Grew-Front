@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 const CollapsedCard = styled.div`
   border: 1px solid transparent;
@@ -13,7 +13,7 @@ const CollapsedHeader = styled.div`
   align-items: center;
 `
 
-const CollapsedQuestion = styled.div`
+const CollapsedTitle = styled.div`
   display: flex;
   font-weight: bold;
   color: var(--color-primary);
@@ -22,6 +22,12 @@ const CollapsedQuestion = styled.div`
     width: 20px;
     height: 20px;
   }
+
+  ${props =>
+    props.primary &&
+    css`
+      color: var(--color-primary);
+    `}
 `
 
 const Icon = styled.img`
@@ -29,18 +35,18 @@ const Icon = styled.img`
   height: 20px;
 `
 
-const QuestionListItem = ({ onItemClick, question, icon }) => {
+const TitleListItem = ({ onItemClick, title, icon, ...props }) => {
   return (
     <CollapsedCard onClick={onItemClick}>
       <CollapsedHeader>
-        <CollapsedQuestion>
-          <span>{question}</span>
+        <CollapsedTitle {...props}>
+          <span>{title}</span>
           {/* <img src={getEmotionIcon(post.emotion_type)} alt="감정" /> */}
-        </CollapsedQuestion>
+        </CollapsedTitle>
         <Icon src={icon} alt="아이콘" />
       </CollapsedHeader>
     </CollapsedCard>
   )
 }
 
-export default QuestionListItem
+export default TitleListItem

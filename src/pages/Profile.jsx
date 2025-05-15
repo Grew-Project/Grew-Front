@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import { AnswerCard } from '../components/AnswerCard'
 import nextIcon from '@/assets/icons/next-icon.svg'
 import { Spinner } from '../components/Spinner'
-import QuestionListItem from '../components/QuestionListItem'
+import TitleListItem from '../components/TitleListItem'
 
 export const Profile = () => {
   const { nickname } = useParams()
@@ -86,10 +86,11 @@ export const Profile = () => {
           }
 
           return (
-            <QuestionListItem
+            <TitleListItem
+              primary
               key={post.created_at}
               onItemClick={() => setExpandedPost(post.created_at)}
-              question={post.question_content}
+              title={post.question_content}
               icon={nextIcon}
             />
           )
@@ -142,33 +143,4 @@ const Buttons = styled.div`
     height: 17px;
     width: 17px;
   }
-`
-
-const CollapsedCard = styled.div`
-  border: 1px solid transparent;
-  border-radius: 8px;
-  cursor: pointer;
-`
-
-const CollapsedHeader = styled.div`
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`
-
-const CollapsedQuestion = styled.div`
-  display: flex;
-  font-weight: bold;
-  color: var(--color-primary);
-
-  img {
-    width: 20px;
-    height: 20px;
-  }
-`
-
-const ArrowIcon = styled.img`
-  width: 20px;
-  height: 20px;
 `
