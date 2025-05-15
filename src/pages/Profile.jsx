@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { ActionButton } from '../components/ActionButton'
 import flowerIcon from '@/assets/icons/flower-icon.svg'
 import leafIcon from '@/assets/icons/leaf-icon.svg'
-import { getUserAnswers, sendFlower, sendLeaf } from '../api/community'
+import { checkFlower, getUserAnswers, sendFlower, sendLeaf } from '../api/community'
 import { InputModal } from '../components/modal/InputModal'
 import { MessageModal } from '../components/modal/MessageModal'
 import styled from 'styled-components'
@@ -23,6 +23,7 @@ export const Profile = () => {
   const [modalType, setModalType] = useState(null)
   const [postList, setPostList] = useState([])
   const [expandedPost, setExpandedPost] = useState(null)
+  const [flowerSent, setFlowerSent] = useState(false)
 
   const fetchUserAnswers = async () => {
     try {
@@ -42,8 +43,21 @@ export const Profile = () => {
     fetchUserAnswers(profileNickname)
   }, [])
 
+  useEffect(() => {
+    const fetchFlowerStatus = async () => {
+      try {
+        const data = await checkFlower(profileNickname, nickname)
+        setFlowerSent(data)
+      } catch (error) {
+        console.log(error.message)
+      }
+    }
+    fetchFlowerStatus()
+  }, [])
+
   const handleSendFlower = () => {
     setModalType('flower')
+    setFlowerSent(true)
     sendFlower(profileNickname, nickname)
   }
 
@@ -59,6 +73,7 @@ export const Profile = () => {
         <ActionButton
           icon={flowerIcon}
           text="응원꽃 보내기"
+          disabled={flowerSent}
           onClick={() => handleSendFlower(profileNickname)}
         />
         <ActionButton

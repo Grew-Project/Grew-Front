@@ -11,7 +11,7 @@ import gobackIcon from '@/assets/icons/goback-icon.svg'
 
 import styled from 'styled-components'
 import { useEffect, useState } from 'react'
-import { getPostList, sendFlower, sendLeaf } from '../api/community'
+import { checkFlower, getPostList, sendFlower, sendLeaf } from '../api/community'
 import { Spinner } from '../components/Spinner'
 import { InputModal } from '../components/modal/InputModal'
 import { MessageModal } from '../components/modal/MessageModal'
@@ -45,6 +45,8 @@ const Community = () => {
   const [expandedPost, setExpandedPost] = useState(null)
   const [targetNickname, setTargetNickname] = useState('')
   const [leafMessage, setLeafMessage] = useState('')
+  const [flowerSentMap, setFlowerSentMap] = useState({}) // nickname → true/false
+
   const navigate = useNavigate()
 
   const nickname = useAuthStore(state => state.nickname)
@@ -66,6 +68,24 @@ const Community = () => {
     fetchPostList()
   }, [])
 
+  useEffect(() => {
+    const fetchFlowerStatus = async () => {
+      const uniqueNicknames = [...new Set(postList.map(post => post.nickname))]
+      const statusMap = {}
+
+      for (const receiverNickname of uniqueNicknames) {
+        const data = await checkFlower(receiverNickname, nickname)
+        statusMap[receiverNickname] = data
+      }
+
+      setFlowerSentMap(statusMap)
+      console.log(nickname)
+      console.log(statusMap)
+    }
+
+    if (postList.length > 0) fetchFlowerStatus()
+  }, [postList])
+
   const filteredPosts = postList.filter(post => {
     const emotion = post.emotion_type.toLowerCase()
     return selectedFace === 'all' || emotion === selectedFace
@@ -79,10 +99,15 @@ const Community = () => {
     setExpandedPost(prev => (prev === id ? null : id))
   }
 
-  const handleSendFlower = targetNickname => {
+  const handleSendFlower = async targetNickname => {
     setTargetNickname(targetNickname)
-    setModalType('flower')
-    sendFlower(targetNickname, nickname)
+    try {
+      await sendFlower(targetNickname, nickname)
+      setModalType('flower')
+      setFlowerSentMap(prev => ({ ...prev, [targetNickname]: true }))
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const handleSendLeaf = targetNickname => {
@@ -126,6 +151,7 @@ const Community = () => {
           >
             <Buttons>
               <ActionButton
+                disabled={flowerSentMap[post.nickname]}
                 icon={flowerIcon}
                 text="응원꽃 보내기"
                 onClick={() => handleSendFlower(post.nickname)}

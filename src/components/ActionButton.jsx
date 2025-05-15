@@ -16,11 +16,13 @@ const StyledButton = styled.button`
   }
 `
 
-export const ActionButton = ({ icon, text, onClick }) => {
+export const ActionButton = ({ icon, text, onClick, disabled }) => {
   return (
     <StyledButton
+      disabled={disabled}
       onClick={e => {
         e.stopPropagation()
+        if (disabled) return
         onClick?.()
       }}
     >
