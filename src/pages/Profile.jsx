@@ -8,8 +8,9 @@ import { InputModal } from '../components/modal/InputModal'
 import { MessageModal } from '../components/modal/MessageModal'
 import styled from 'styled-components'
 import { AnswerCard } from '../components/AnswerCard'
-import leftIcon from '@/assets/icons/goback-icon.svg'
+import nextIcon from '@/assets/icons/next-icon.svg'
 import { Spinner } from '../components/Spinner'
+import QuestionListItem from '../components/QuestionListItem'
 
 export const Profile = () => {
   const { nickname } = useParams()
@@ -85,15 +86,12 @@ export const Profile = () => {
           }
 
           return (
-            <CollapsedCard key={post.created_at} onClick={() => setExpandedPost(post.created_at)}>
-              <CollapsedHeader>
-                <CollapsedQuestion>
-                  <span>{post.question_content}</span>
-                  {/* <img src={getEmotionIcon(post.emotion_type)} alt="감정" /> */}
-                </CollapsedQuestion>
-                <ArrowIcon src={leftIcon} style={{ transform: 'rotate(180deg)' }} alt="화살표" />
-              </CollapsedHeader>
-            </CollapsedCard>
+            <QuestionListItem
+              key={post.created_at}
+              onItemClick={() => setExpandedPost(post.created_at)}
+              question={post.question_content}
+              icon={nextIcon}
+            />
           )
         })
       )}

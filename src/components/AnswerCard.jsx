@@ -1,6 +1,6 @@
 import { Card } from './Card'
 import styled from 'styled-components'
-import leftIcon from '@/assets/icons/goback-icon.svg'
+import nextIcon from '@/assets/icons/next-icon.svg'
 
 const CardHeader = styled.div`
   display: flex;
@@ -52,7 +52,7 @@ export const AnswerCard = ({
         <RightSide>
           <span>{post.nickname}</span>
           {showToggleIcon && (
-            <ArrowIcon src={leftIcon} style={{ transform: 'rotate(270deg)' }} alt="화살표" />
+            <ArrowIcon src={nextIcon} style={{ transform: 'rotate(90deg)' }} alt="화살표" />
           )}
         </RightSide>
       </CardHeader>
