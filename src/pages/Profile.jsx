@@ -8,12 +8,8 @@ import { InputModal } from '../components/modal/InputModal'
 import { MessageModal } from '../components/modal/MessageModal'
 import styled from 'styled-components'
 import { AnswerCard } from '../components/AnswerCard'
-import confusionFace from '@/assets/faces/confusion-face.svg'
-import angerFace from '@/assets/faces/anger-face.svg'
-import happinessFace from '@/assets/faces/happiness-face.svg'
-import sadnessFace from '@/assets/faces/sadness-face.svg'
-import loveFace from '@/assets/faces/love-face.svg'
 import leftIcon from '@/assets/icons/goback-icon.svg'
+import { Spinner } from '../components/Spinner'
 
 export const Profile = () => {
   const { nickname } = useParams()
@@ -42,10 +38,6 @@ export const Profile = () => {
     fetchUserAnswers(nickname)
   }, [])
 
-  const handleCardClick = id => {
-    setExpandedPost(prev => (prev === id ? null : id))
-  }
-
   const handleSendFlower = () => {
     setModalType('flower')
     sendFlower(nickname, '정서윤') // 수정 예정
@@ -54,17 +46,6 @@ export const Profile = () => {
   const handleSendLeaf = () => {
     setModalType('leaf')
     setLeafMessage('')
-  }
-
-  const getEmotionIcon = emotionType =>
-    emotionType ? emotionIcons[emotionType.toLowerCase()] : null
-
-  const emotionIcons = {
-    confusion: confusionFace,
-    anger: angerFace,
-    happiness: happinessFace,
-    sadness: sadnessFace,
-    love: loveFace,
   }
 
   useEffect(() => {}, [nickname])
@@ -84,34 +65,38 @@ export const Profile = () => {
           onClick={() => handleSendLeaf(nickname)}
         />
       </Buttons>
-      {postList.map(post => {
-        const isExpanded = expandedPost === post.created_at
+      {isLoading ? (
+        <Spinner /> // 수정 예정
+      ) : (
+        postList.map(post => {
+          const isExpanded = expandedPost === post.created_at
 
-        if (isExpanded) {
+          if (isExpanded) {
+            return (
+              <AnswerCard
+                key={post.created_at}
+                post={post}
+                showToggleIcon
+                // emotionIcon={getEmotionIcon(post.emotion_type)}
+                isExpanded
+                onCardClick={() => setExpandedPost(null)}
+              ></AnswerCard>
+            )
+          }
+
           return (
-            <AnswerCard
-              key={post.created_at}
-              post={post}
-              showToggleIcon
-              // emotionIcon={getEmotionIcon(post.emotion_type)}
-              isExpanded
-              onCardClick={() => setExpandedPost(null)}
-            ></AnswerCard>
+            <CollapsedCard key={post.created_at} onClick={() => setExpandedPost(post.created_at)}>
+              <CollapsedHeader>
+                <CollapsedQuestion>
+                  <span>{post.question_content}</span>
+                  {/* <img src={getEmotionIcon(post.emotion_type)} alt="감정" /> */}
+                </CollapsedQuestion>
+                <ArrowIcon src={leftIcon} style={{ transform: 'rotate(180deg)' }} alt="화살표" />
+              </CollapsedHeader>
+            </CollapsedCard>
           )
-        }
-
-        return (
-          <CollapsedCard key={post.created_at} onClick={() => setExpandedPost(post.created_at)}>
-            <CollapsedHeader>
-              <CollapsedQuestion>
-                <span>{post.question_content}</span>
-                {/* <img src={getEmotionIcon(post.emotion_type)} alt="감정" /> */}
-              </CollapsedQuestion>
-              <ArrowIcon src={leftIcon} style={{ transform: 'rotate(180deg)' }} alt="화살표" />
-            </CollapsedHeader>
-          </CollapsedCard>
-        )
-      })}
+        })
+      )}
 
       {modalType === 'flower' && (
         <MessageModal
