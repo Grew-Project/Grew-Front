@@ -1,0 +1,36 @@
+import axios from 'axios'
+import useAuthStore from '../store/useAuthStore'
+
+const BASE_URL = 'http://localhost:3000'
+// const BASE_URL = 'https://port-0-grew-back-man9teqf50330ae1.sel4.cloudtype.app'
+
+export const getTodayQuestion = async emotionType => {
+  //   const userId = useAuthStore.getState().userId
+  try {
+    const response = await axios.get(`${BASE_URL}/api/today/question-search`, {
+      params: {
+        emotion_type: emotionType,
+      },
+    })
+    return response.data[0]
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const createTodayAnswer = async (question_id, answer_content, emotion_type, is_public) => {
+  const nickname = useAuthStore.getState().nickname
+  try {
+    const response = await axios.post(`${BASE_URL}/api/today/answer-write`, {
+      nickname,
+      question_id,
+      answer_content,
+      emotion_type,
+      is_public,
+    })
+
+    return response
+  } catch (error) {
+    console.error(error)
+  }
+}

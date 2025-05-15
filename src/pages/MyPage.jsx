@@ -5,8 +5,11 @@ import { useNavigate } from 'react-router-dom'
 import { InputModal } from '../components/modal/InputModal'
 import { ConfirmModal } from '../components/modal/ConfirmModal'
 import { changePassword } from '../api/mypage'
+import useAuthStore from '../store/useAuthStore'
 
 const MyPage = () => {
+  const logout = useAuthStore(state => state.logout)
+
   const nickname = '테스트' // 임시 데이터
   const userId = 'test123' // 임시 데이터
 
@@ -80,8 +83,11 @@ const MyPage = () => {
     }
   }
 
-  const handleLogout = () => {}
-
+  const handleLogoutClick = () => {
+    logout()
+    setModalType(null)
+  }
+  
   return (
     <div>
       {menuList.map((menu, index) => (
@@ -115,7 +121,7 @@ const MyPage = () => {
         <ConfirmModal
           message={'로그아웃 하시겠습니까?'}
           onCancel={() => setModalType(null)}
-          onConfirm={handleLogout}
+          onConfirm={handleLogoutClick}
         />
       )}
     </div>
