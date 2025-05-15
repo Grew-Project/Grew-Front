@@ -206,7 +206,6 @@ const Background = styled.div`
   width: 100%;
   height: 100%;
   background: linear-gradient(145deg, #d1f3ff 10%, #ffffff 23%, #a9e8ff 99%);
-  z-index: -999;
   overflow: hidden;
 `
 const GrassWrapper = styled.div`
