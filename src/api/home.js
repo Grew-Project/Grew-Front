@@ -1,7 +1,8 @@
 import axios from 'axios'
 import useAuthStore from '../store/useAuthStore'
 
-const BASE_URL = 'https://port-0-grew-back-man9teqf50330ae1.sel4.cloudtype.app'
+const BASE_URL = 'http://localhost:3000'
+// const BASE_URL = 'https://port-0-grew-back-man9teqf50330ae1.sel4.cloudtype.app'
 
 const getAnswerCount = async () => {
   const userId = useAuthStore.getState().userId
