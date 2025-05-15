@@ -12,6 +12,7 @@ import TodayQuestion from './pages/TodayQuestion'
 import Leaves from './pages/Leaves'
 import { PrivateRoute, PublicRoute } from './Routes'
 import { Profile } from './pages/Profile'
+import { MyAnswers } from './pages/MyAnswers'
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
               path="/profile/:profileNickname"
               element={<PrivateRoute element={<Profile />} />}
             />
+            <Route path="/my-answers" element={<PrivateRoute element={<MyAnswers />} />} />
           </Route>
           <Route element={<AuthLayout />}>
             <Route path="/" element={<PublicRoute element={<Landing />} />} />
