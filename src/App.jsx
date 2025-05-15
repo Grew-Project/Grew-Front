@@ -25,7 +25,10 @@ function App() {
             <Route path="/community" element={<PrivateRoute element={<Community />} />} />
             <Route path="/question/today" element={<PrivateRoute element={<TodayQuestion />} />} />
             <Route path="/leaves" element={<PrivateRoute element={<Leaves />} />} />
-            <Route path="/profile/:nickname" element={<PrivateRoute element={<Profile />} />} />
+            <Route
+              path="/profile/:profileNickname"
+              element={<PrivateRoute element={<Profile />} />}
+            />
           </Route>
           <Route element={<AuthLayout />}>
             <Route path="/" element={<PublicRoute element={<Landing />} />} />

@@ -10,8 +10,7 @@ import useAuthStore from '../store/useAuthStore'
 const MyPage = () => {
   const logout = useAuthStore(state => state.logout)
 
-  const nickname = '테스트' // 임시 데이터
-  const userId = 'test123' // 임시 데이터
+  const userId = useAuthStore(state => state.userId)
 
   const [modalType, setModalType] = useState(null)
   const navigate = useNavigate()
@@ -87,7 +86,7 @@ const MyPage = () => {
     logout()
     setModalType(null)
   }
-  
+
   return (
     <div>
       {menuList.map((menu, index) => (
