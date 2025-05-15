@@ -1,16 +1,38 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import goBack from '../assets/icons/goback-icon.svg'
 import styled from 'styled-components'
+import { getLeaves } from '../api/leaf'
+
+import goBack from '../assets/icons/goback-icon.svg'
 import LeafIcon from '../assets/icons/leaf-icon.svg'
 import refreshIcon from '../assets/icons/refresh-icon.svg'
 
 const Leaves = () => {
+  const [leaves, setLeaves] = useState([])
+
   const navigate = useNavigate()
   const handlePrev = () => {
     navigate('/home')
   }
 
+  //api 연동
+  useEffect(() => {
+    const fetchLeaves = async () => {
+      try {
+        const res = await getLeaves()
+        if (res.status === 404) {
+          // 받은 잎사귀 없음
+        } else if (res.status === 200) {
+          // 받은 잎사귀 있음
+          setLeaves(res.data)
+        }
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    fetchLeaves()
+  }, [])
   return (
     <>
       <HeaderContainer>
@@ -33,38 +55,12 @@ const Leaves = () => {
         </Header>
       </HeaderContainer>
       <LeafContent>
-        <LeafCard>
-          <Nickname>김하은</Nickname>
-          <Message>답변답변답변답변답변답변답변답변답변답변답변답변답변답변답변답변</Message>
-        </LeafCard>
-        <LeafCard>
-          <Nickname>김하은</Nickname>
-          <Message>답변답변답변답변답변답변답변답변답변답변답변답변답변답변답변답변</Message>
-        </LeafCard>
-        <LeafCard>
-          <Nickname>김하은</Nickname>
-          <Message>답변답변답변답변답변답변답변답변답변답변답변답변답변답변답변답변</Message>
-        </LeafCard>
-        <LeafCard>
-          <Nickname>김하은</Nickname>
-          <Message>답변답변답변답변답변답변답변답변답변답변답변답변답변답변답변답변</Message>
-        </LeafCard>
-        <LeafCard>
-          <Nickname>김하은</Nickname>
-          <Message>답변답변답변답변답변답변답변답변답변답변답변답변답변답변답변답변</Message>
-        </LeafCard>
-        <LeafCard>
-          <Nickname>김하은</Nickname>
-          <Message>답변답변답변답변답변답변답변답변답변답변답변답변답변답변답변답변</Message>
-        </LeafCard>
-        <LeafCard>
-          <Nickname>김하은</Nickname>
-          <Message>답변답변답변답변답변답변답변답변답변답변답변답변답변답변답변답변</Message>
-        </LeafCard>
-        <LeafCard>
-          <Nickname>김하은</Nickname>
-          <Message>답변답변답변답변답변답변답변답변답변답변답변답변답변답변답변답변</Message>
-        </LeafCard>
+        {leaves.map((leaf, idx) => (
+          <LeafCard key={idx}>
+            <Nickname>{leaf.sender_nickname}</Nickname>
+            <Message>{leaf.leaf_content}</Message>
+          </LeafCard>
+        ))}
         <Padding />
       </LeafContent>
     </>
