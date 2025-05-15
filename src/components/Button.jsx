@@ -8,19 +8,29 @@ const StyledButton = styled.button`
   font-weight: bold;
   font-size: ${props => props.fontSize || '15px'};
   background-color: var(--color-secondary); // 기본 배경
+  color: var(--font-color-black);
 
   ${props =>
     props.primary &&
     css`
+      background-color: var(--color-primary);
       color: white;
-      background-color: var(--color-primary); // primary일 때 덮어쓰기
     `}
 
   &:disabled {
     cursor: not-allowed;
-    background-color: var(--color-primary); // 비활성화 색상
-    color: var(--color-disabled-text); // 비활성화 텍스트 색상
     opacity: 0.5;
+
+    ${props =>
+      props.primary
+        ? css`
+            background-color: var(--color-primary);
+            color: var(--color-disabled-text);
+          `
+        : css`
+            background-color: var(--color-secondary);
+            color: var(--color-disabled-text);
+          `}
   }
 `
 
