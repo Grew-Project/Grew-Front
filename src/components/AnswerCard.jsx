@@ -1,5 +1,6 @@
 import { Card } from './Card'
 import styled from 'styled-components'
+import leftIcon from '@/assets/icons/goback-icon.svg'
 
 const CardHeader = styled.div`
   display: flex;
@@ -32,7 +33,14 @@ const AnswerPreview = styled.p`
   ${({ expanded }) => (expanded ? '' : '-webkit-line-clamp: 2;')}
 `
 
-export const AnswerCard = ({ onCardClick, post, emotionIcon, isExpanded, children }) => {
+export const AnswerCard = ({
+  onCardClick,
+  post,
+  emotionIcon,
+  showToggleIcon,
+  isExpanded,
+  children,
+}) => {
   return (
     <Card onClick={onCardClick}>
       <CardHeader>
@@ -40,10 +48,28 @@ export const AnswerCard = ({ onCardClick, post, emotionIcon, isExpanded, childre
           <QuestionText>{post.question_content}</QuestionText>
           {emotionIcon && <img src={emotionIcon} alt={post.emotion_type} />}
         </QuestionBlock>
-        <span>{post.nickname}</span>
+
+        <RightSide>
+          <span>{post.nickname}</span>
+          {showToggleIcon && (
+            <ArrowIcon src={leftIcon} style={{ transform: 'rotate(270deg)' }} alt="화살표" />
+          )}
+        </RightSide>
       </CardHeader>
+
       <AnswerPreview expanded={isExpanded}>{post.answer_content}</AnswerPreview>
       {children}
     </Card>
   )
 }
+
+const RightSide = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`
+
+const ArrowIcon = styled.img`
+  width: 20px;
+  height: 20px;
+`

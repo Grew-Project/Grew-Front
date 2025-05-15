@@ -17,6 +17,7 @@ import { InputModal } from '../components/modal/InputModal'
 import { MessageModal } from '../components/modal/MessageModal'
 import { ActionButton } from '../components/ActionButton'
 import { AnswerCard } from '../components/AnswerCard'
+import { useNavigate } from 'react-router-dom'
 
 const menuItems = [
   { id: 'all', label: '전체' },
@@ -43,6 +44,7 @@ const Community = () => {
   const [expandedPost, setExpandedPost] = useState(null)
   const [targetNickname, setTargetNickname] = useState('')
   const [leafMessage, setLeafMessage] = useState('')
+  const navigate = useNavigate()
 
   const fetchPostList = async () => {
     try {
@@ -136,12 +138,13 @@ const Community = () => {
                 <ActionButton
                   icon={profileIcon}
                   text="프로필 가기"
-                  // onClick={}
+                  onClick={() => navigate(`/profile/${post.nickname}`)}
                 />
               </ProfileButton>
             )}
           </AnswerCard>
         ))
+        // .slice(0, 7)
       )}
       {modalType === 'flower' && (
         <MessageModal
