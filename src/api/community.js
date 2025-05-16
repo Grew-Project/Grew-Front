@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const BASE_URL = 'https://port-0-grew-back-man9teqf50330ae1.sel4.cloudtype.app' // 공통 API 주소
+const BASE_URL = 'http://localhost:3000'
 
 export const getPostList = async () => {
   try {
@@ -11,7 +11,7 @@ export const getPostList = async () => {
   }
 }
 
-export const sendFlower = async (senderNickname, receiverNickname) => {
+export const sendFlower = async (receiverNickname, senderNickname) => {
   try {
     const response = await axios.post(`${BASE_URL}/api/comm/send-flower`, {
       sender_nickname: senderNickname,
@@ -47,6 +47,18 @@ export const getUserAnswers = async nickname => {
     return response.data.filter(post => {
       return post.is_public
     })
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+export const checkFlower = async (targetNickname, nickname) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/comm/check-flower?receiver_nickname=${targetNickname}&sender_nickname=${nickname}`
+    )
+
+    return response.data.alreadySent
   } catch (error) {
     console.log(error.message)
   }
