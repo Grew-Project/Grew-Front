@@ -6,6 +6,8 @@ const StyledEmpty = styled.div`
   top: 50%;
   transform: translate(-50%, -50%);
   color: var(--font-color-gray);
+  text-align: center;
+  word-break: keep-all;
 `
 
 export const Empty = ({ children }) => {

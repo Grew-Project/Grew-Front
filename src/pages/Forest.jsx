@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import goBack from '../assets/icons/goback-icon.svg'
@@ -14,52 +13,32 @@ import AngerFace from '../assets/faces/tree-anger-face.png'
 import ConfusionFace from '../assets/faces/tree-confusion-face.png'
 import LoveFace from '../assets/faces/tree-love-face.png'
 import SadnessFace from '../assets/faces/tree-sadness-face.png'
+import { useEffect, useState } from 'react'
+import { getForest } from '../api/forest'
+import { Spinner } from '../components/Spinner'
 
 const Forest = () => {
-  const treeData = []
-  // const treeData = [
-  //   {
-  //     treeType: '사과나무',
-  //     treeName: '행복한 행복가득나무',
-  //     treeEmotion: 'Happiness',
-  //     startAt: '2025-05-14T07:32:03.084Z',
-  //     endAt: '2025-05-14T04:32:24.484Z',
-  //     emotionCount: { Love: 3, Happiness: 5, Confusion: 3, Sadness: 3, Anger: 2 },
-  //   },
-  //   {
-  //     treeType: '벚꽃나무',
-  //     treeName: '슬픈나무',
-  //     treeEmotion: 'Sadness',
-  //     startAt: '2025-05-14T07:32:03.084Z',
-  //     endAt: '2025-05-14T04:32:24.484Z',
-  //     emotionCount: { Love: 3, Happiness: 3, Confusion: 3, Sadness: 5, Anger: 2 },
-  //   },
-  //   {
-  //     treeType: '단풍나무',
-  //     treeName: '화난나무',
-  //     treeEmotion: 'Anger',
-  //     startAt: '2025-05-14T07:32:03.084Z',
-  //     endAt: '2025-05-14T04:32:24.484Z',
-  //     emotionCount: { Love: 3, Happiness: 3, Confusion: 3, Sadness: 5, Anger: 2 },
-  //   },
-  //   {
-  //     treeType: '은행나무',
-  //     treeName: '당황나무',
-  //     treeEmotion: 'Confusion',
-  //     startAt: '2025-05-14T07:32:03.084Z',
-  //     endAt: '2025-05-14T04:32:24.484Z',
-  //     emotionCount: { Love: 3, Happiness: 3, Confusion: 3, Sadness: 5, Anger: 2 },
-  //   },
-  //   {
-  //     treeType: '단풍나무',
-  //     treeName: '사랑나무',
-  //     treeEmotion: 'Love',
-  //     startAt: '2025-05-14T07:32:03.084Z',
-  //     endAt: '2025-05-14T04:32:24.484Z',
-  //     emotionCount: { Love: 3, Happiness: 3, Confusion: 3, Sadness: 5, Anger: 2 },
-  //   },
-  // ]
+  const [isLoading, setIsLoading] = useState(false)
+  const [total, setTotal] = useState(0)
+  const [treeData, setTreeData] = useState([])
 
+  useEffect(() => {
+    const fetchForest = async () => {
+      try {
+        setIsLoading(true)
+        const res = await getForest()
+        if (res.status === 200) {
+          setTreeData(res.data.groups)
+          setTotal(res.data.total)
+        }
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchForest()
+  }, [])
   const treeImages = {
     사과나무: 사과나무,
     벚꽃나무: 벚꽃나무,
@@ -78,7 +57,6 @@ const Forest = () => {
   const handlePrev = () => {
     navigate('/mypage')
   }
-  console.log(treeData.length)
 
   return (
     <>
@@ -91,16 +69,20 @@ const Forest = () => {
         </Header>
       </HeaderContainer>
       <ForestContainer>
-        {treeData.length === 0 ? (
+        {isLoading ? (
+          <SpinnerWrapper>
+            <Spinner color="gray" />
+          </SpinnerWrapper>
+        ) : total === 0 ? (
           <Empty>아직 다 자란 나무가 없어요.</Empty>
         ) : (
           treeData.map((tree, idx) => (
             <TreeContainer to={`/report/${idx + 1}`} key={idx}>
               <TreeImgWrapper>
-                <img src={treeImages[tree.treeType]} alt={tree.treeType} />
-                <img src={emotionImages[tree.treeEmotion]} alt={tree.treeEmotion} />
+                <img src={treeImages[tree.tree_type]} alt={tree.tree_type} />
+                <img src={emotionImages[tree.dominant_emotion]} alt={tree.dominant_emotion} />
               </TreeImgWrapper>
-              <TreeName>{tree.treeName}</TreeName>
+              <TreeName>{tree.tree_name}</TreeName>
             </TreeContainer>
           ))
         )}
@@ -112,6 +94,12 @@ const Forest = () => {
 
 export default Forest
 
+const SpinnerWrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`
 const HeaderContainer = styled.div`
   position: fixed;
   top: 0;

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import goBack from '../assets/icons/goback-icon.svg'
@@ -17,52 +17,13 @@ import AngerFace from '../assets/faces/anger-face.svg'
 import ConfusionFace from '../assets/faces/confusion-face.svg'
 import LoveFace from '../assets/faces/love-face.svg'
 import SadnessFace from '../assets/faces/sadness-face.svg'
+import { getForest } from '../api/forest'
+import { Spinner } from '../components/Spinner'
 
 const Report = () => {
-  const treeData = [
-    {
-      treeType: '사과나무',
-      treeName: '행복한 행복가득나무',
-      treeEmotion: 'Happiness',
-      startAt: '2025-05-14T07:32:03.084Z',
-      endAt: '2025-05-14T04:32:24.484Z',
-      emotionCount: { Love: 1, Happiness: 5, Confusion: 3, Sadness: 3, Anger: 2 },
-    },
-    {
-      treeType: '벚꽃나무',
-      treeName: '슬픈나무',
-      treeEmotion: 'Sadness',
-      startAt: '2025-05-14T07:32:03.084Z',
-      endAt: '2025-05-14T04:32:24.484Z',
-      emotionCount: { Love: 2, Happiness: 3, Confusion: 3, Sadness: 5, Anger: 2 },
-    },
-    {
-      treeType: '단풍나무',
-      treeName: '화난나무',
-      treeEmotion: 'Anger',
-      startAt: '2025-05-14T07:32:03.084Z',
-      endAt: '2025-05-14T04:32:24.484Z',
-      emotionCount: { Love: 3, Happiness: 3, Confusion: 3, Sadness: 5, Anger: 2 },
-    },
-    {
-      treeType: '은행나무',
-      treeName: '당황나무',
-      treeEmotion: 'Confusion',
-      startAt: '2025-05-14T07:32:03.084Z',
-      endAt: '2025-05-14T04:32:24.484Z',
-      emotionCount: { Love: 4, Happiness: 3, Confusion: 3, Sadness: 5, Anger: 2 },
-    },
-    {
-      treeType: '단풍나무',
-      treeName: '사랑나무',
-      treeEmotion: 'Love',
-      startAt: '2025-05-14T07:32:03.084Z',
-      endAt: '2025-05-14T04:32:24.484Z',
-      emotionCount: { Love: 5, Happiness: 3, Confusion: 3, Sadness: 5, Anger: 2 },
-    },
-  ]
+  const [isLoading, setIsLoading] = useState(false)
+  const [treeData, setTreeData] = useState([])
   const { treeId } = useParams()
-  const tree = treeData[parseInt(treeId) - 1]
 
   const treeImages = {
     사과나무: 사과나무,
@@ -84,14 +45,21 @@ const Report = () => {
   }
 
   useEffect(() => {
-    const id = parseInt(treeId)
-    if (!treeData[id - 1]) {
-      navigate('/forest')
+    const fetchForest = async () => {
+      try {
+        setIsLoading(true)
+        const res = await getForest()
+        if (res.status === 200) {
+          setTreeData(res.data.groups)
+        }
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setIsLoading(false)
+      }
     }
+    fetchForest()
   }, [])
-  if (!tree) {
-    return null
-  }
 
   return (
     <>
@@ -104,39 +72,54 @@ const Report = () => {
         </Header>
       </HeaderContainer>
       <ReportContainer>
-        <TreeContainer>
-          <TreeImgWrapper>
-            <img src={treeImages[tree.treeType]} alt={tree.treeType} />
-            <img src={TreeEmotionImages[tree.treeEmotion]} alt={tree.treeEmotion} />
-          </TreeImgWrapper>
-          <TreeName>{tree.treeName}</TreeName>
-          <Duration>
-            {tree.startAt.slice(0, 10).replace(/-/g, '.')} ~{' '}
-            {tree.endAt.slice(0, 10).replace(/-/g, '.')}
-          </Duration>
-          <EmotionsContainer>
-            <Emotion>
-              <img src={ConfusionFace} alt="당황" />
-              {tree.emotionCount.Confusion}
-            </Emotion>
-            <Emotion>
-              <img src={AngerFace} alt="화남" />
-              {tree.emotionCount.Anger}
-            </Emotion>
-            <Emotion>
-              <img src={HappinessFace} alt="행복" />
-              {tree.emotionCount.Happiness}
-            </Emotion>
-            <Emotion>
-              <img src={SadnessFace} alt="슬픔" />
-              {tree.emotionCount.Sadness}
-            </Emotion>
-            <Emotion>
-              <img src={LoveFace} alt="사랑" />
-              {tree.emotionCount.Love}
-            </Emotion>
-          </EmotionsContainer>
-        </TreeContainer>
+        {isLoading ? (
+          <SpinnerWrapper>
+            <Spinner color="gray" />
+          </SpinnerWrapper>
+        ) : (
+          treeData.length > 0 &&
+          treeData[parseInt(treeId) - 1] && (
+            <TreeContainer>
+              <TreeImgWrapper>
+                <img
+                  src={treeImages[treeData[parseInt(treeId - 1)].tree_type]}
+                  alt={treeData[parseInt(treeId - 1)].tree_type}
+                />
+                <img
+                  src={TreeEmotionImages[treeData[parseInt(treeId - 1)].dominant_emotion]}
+                  alt={treeData[parseInt(treeId - 1)].tree_emotion}
+                />
+              </TreeImgWrapper>
+              <TreeName>{treeData[parseInt(treeId - 1)].tree_name}</TreeName>
+              <Duration>
+                {treeData[parseInt(treeId - 1)].start_at.slice(0, 10).replace(/-/g, '.')} ~{' '}
+                {treeData[parseInt(treeId - 1)].end_at.slice(0, 10).replace(/-/g, '.')}
+              </Duration>
+              <EmotionsContainer>
+                <Emotion>
+                  <img src={ConfusionFace} alt="당황" />
+                  {treeData[parseInt(treeId - 1)].emotion_counts.Confusion}
+                </Emotion>
+                <Emotion>
+                  <img src={AngerFace} alt="화남" />
+                  {treeData[parseInt(treeId - 1)].emotion_counts.Anger}
+                </Emotion>
+                <Emotion>
+                  <img src={HappinessFace} alt="행복" />
+                  {treeData[parseInt(treeId - 1)].emotion_counts.Happiness}
+                </Emotion>
+                <Emotion>
+                  <img src={SadnessFace} alt="슬픔" />
+                  {treeData[parseInt(treeId - 1)].emotion_counts.Sadness}
+                </Emotion>
+                <Emotion>
+                  <img src={LoveFace} alt="사랑" />
+                  {treeData[parseInt(treeId - 1)].emotion_counts.Love}
+                </Emotion>
+              </EmotionsContainer>
+            </TreeContainer>
+          )
+        )}
       </ReportContainer>
     </>
   )
@@ -144,6 +127,12 @@ const Report = () => {
 
 export default Report
 
+const SpinnerWrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`
 const HeaderContainer = styled.div`
   position: fixed;
   top: 0;
