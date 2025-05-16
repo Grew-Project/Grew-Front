@@ -15,48 +15,49 @@ import LoveFace from '../assets/faces/tree-love-face.png'
 import SadnessFace from '../assets/faces/tree-sadness-face.png'
 
 const Forest = () => {
-  const treeData = [
-    {
-      treeType: '사과나무',
-      treeName: '행복한 행복가득나무',
-      treeEmotion: 'Happiness',
-      startAt: '2025-05-14T07:32:03.084Z',
-      endAt: '2025-05-14T04:32:24.484Z',
-      emotionCount: { Love: 3, Happiness: 5, Confusion: 3, Sadness: 3, Anger: 2 },
-    },
-    {
-      treeType: '벚꽃나무',
-      treeName: '슬픈나무',
-      treeEmotion: 'Sadness',
-      startAt: '2025-05-14T07:32:03.084Z',
-      endAt: '2025-05-14T04:32:24.484Z',
-      emotionCount: { Love: 3, Happiness: 3, Confusion: 3, Sadness: 5, Anger: 2 },
-    },
-    {
-      treeType: '단풍나무',
-      treeName: '화난나무',
-      treeEmotion: 'Anger',
-      startAt: '2025-05-14T07:32:03.084Z',
-      endAt: '2025-05-14T04:32:24.484Z',
-      emotionCount: { Love: 3, Happiness: 3, Confusion: 3, Sadness: 5, Anger: 2 },
-    },
-    {
-      treeType: '은행나무',
-      treeName: '당황나무',
-      treeEmotion: 'Confusion',
-      startAt: '2025-05-14T07:32:03.084Z',
-      endAt: '2025-05-14T04:32:24.484Z',
-      emotionCount: { Love: 3, Happiness: 3, Confusion: 3, Sadness: 5, Anger: 2 },
-    },
-    {
-      treeType: '단풍나무',
-      treeName: '사랑나무',
-      treeEmotion: 'Love',
-      startAt: '2025-05-14T07:32:03.084Z',
-      endAt: '2025-05-14T04:32:24.484Z',
-      emotionCount: { Love: 3, Happiness: 3, Confusion: 3, Sadness: 5, Anger: 2 },
-    },
-  ]
+  const treeData = []
+  // const treeData = [
+  //   {
+  //     treeType: '사과나무',
+  //     treeName: '행복한 행복가득나무',
+  //     treeEmotion: 'Happiness',
+  //     startAt: '2025-05-14T07:32:03.084Z',
+  //     endAt: '2025-05-14T04:32:24.484Z',
+  //     emotionCount: { Love: 3, Happiness: 5, Confusion: 3, Sadness: 3, Anger: 2 },
+  //   },
+  //   {
+  //     treeType: '벚꽃나무',
+  //     treeName: '슬픈나무',
+  //     treeEmotion: 'Sadness',
+  //     startAt: '2025-05-14T07:32:03.084Z',
+  //     endAt: '2025-05-14T04:32:24.484Z',
+  //     emotionCount: { Love: 3, Happiness: 3, Confusion: 3, Sadness: 5, Anger: 2 },
+  //   },
+  //   {
+  //     treeType: '단풍나무',
+  //     treeName: '화난나무',
+  //     treeEmotion: 'Anger',
+  //     startAt: '2025-05-14T07:32:03.084Z',
+  //     endAt: '2025-05-14T04:32:24.484Z',
+  //     emotionCount: { Love: 3, Happiness: 3, Confusion: 3, Sadness: 5, Anger: 2 },
+  //   },
+  //   {
+  //     treeType: '은행나무',
+  //     treeName: '당황나무',
+  //     treeEmotion: 'Confusion',
+  //     startAt: '2025-05-14T07:32:03.084Z',
+  //     endAt: '2025-05-14T04:32:24.484Z',
+  //     emotionCount: { Love: 3, Happiness: 3, Confusion: 3, Sadness: 5, Anger: 2 },
+  //   },
+  //   {
+  //     treeType: '단풍나무',
+  //     treeName: '사랑나무',
+  //     treeEmotion: 'Love',
+  //     startAt: '2025-05-14T07:32:03.084Z',
+  //     endAt: '2025-05-14T04:32:24.484Z',
+  //     emotionCount: { Love: 3, Happiness: 3, Confusion: 3, Sadness: 5, Anger: 2 },
+  //   },
+  // ]
 
   const treeImages = {
     사과나무: 사과나무,
@@ -76,6 +77,8 @@ const Forest = () => {
   const handlePrev = () => {
     navigate('/mypage')
   }
+  console.log(treeData.length)
+
   return (
     <>
       <HeaderContainer>
@@ -87,15 +90,19 @@ const Forest = () => {
         </Header>
       </HeaderContainer>
       <ForestContainer>
-        {treeData.map((tree, idx) => (
-          <TreeContainer to={`/report/${idx + 1}`} key={idx}>
-            <TreeImgWrapper>
-              <img src={treeImages[tree.treeType]} alt={tree.treeType} />
-              <img src={emotionImages[tree.treeEmotion]} alt={tree.treeEmotion} />
-            </TreeImgWrapper>
-            <TreeName>{tree.treeName}</TreeName>
-          </TreeContainer>
-        ))}
+        {treeData.length === 0 ? (
+          <EmptyForest>아직 다 자란 나무가 없어요.</EmptyForest>
+        ) : (
+          treeData.map((tree, idx) => (
+            <TreeContainer to={`/report/${idx + 1}`} key={idx}>
+              <TreeImgWrapper>
+                <img src={treeImages[tree.treeType]} alt={tree.treeType} />
+                <img src={emotionImages[tree.treeEmotion]} alt={tree.treeEmotion} />
+              </TreeImgWrapper>
+              <TreeName>{tree.treeName}</TreeName>
+            </TreeContainer>
+          ))
+        )}
       </ForestContainer>
       <Padding />
     </>
@@ -150,9 +157,18 @@ const ForestContainer = styled.div`
   gap: 2rem;
   margin-top: 52px;
   padding: 0 2rem;
+  font-size: var(--fs15);
+  font-weight: bold;
 `
 const Padding = styled.div`
   height: 5rem;
+`
+const EmptyForest = styled.div`
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--font-color-gray);
 `
 const TreeContainer = styled(Link)`
   display: flex;
@@ -184,8 +200,6 @@ const TreeImgWrapper = styled.div`
 `
 const TreeName = styled.div`
   margin: 1rem 0;
-  font-size: var(--fs15);
-  font-weight: bold;
   text-align: center;
   word-break: keep-all;
 `
