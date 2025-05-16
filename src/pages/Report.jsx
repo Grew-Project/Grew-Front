@@ -19,6 +19,7 @@ import LoveFace from '../assets/faces/love-face.svg'
 import SadnessFace from '../assets/faces/sadness-face.svg'
 import { getForest } from '../api/forest'
 import { Spinner } from '../components/Spinner'
+import EmotionPieChart from '../components/EmotionPieChart'
 
 const Report = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -117,6 +118,9 @@ const Report = () => {
                   {treeData[parseInt(treeId - 1)].emotion_counts.Love}
                 </Emotion>
               </EmotionsContainer>
+              <EmotionPieChartWrapper>
+                <EmotionPieChart emotion_counts={treeData[parseInt(treeId - 1)].emotion_counts} />
+              </EmotionPieChartWrapper>
             </TreeContainer>
           )
         )}
@@ -226,4 +230,10 @@ const Emotion = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+`
+const EmotionPieChartWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70%;
 `
