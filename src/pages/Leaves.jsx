@@ -7,31 +7,37 @@ import goBack from '../assets/icons/goback-icon.svg'
 import LeafIcon from '../assets/icons/leaf-icon.svg'
 import refreshIcon from '../assets/icons/refresh-icon.svg'
 import Empty from '../components/Empty'
+import { Spinner } from '../components/Spinner'
 
 const Leaves = () => {
   const [leaves, setLeaves] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate()
   const handlePrev = () => {
     navigate('/home')
   }
-
+  const handleRefresh = () => {
+    fetchLeaves()
+  }
   //api 연동
-  useEffect(() => {
-    const fetchLeaves = async () => {
-      try {
-        const res = await getLeaves()
-        if (res.status === 404) {
-          // 받은 잎사귀 없음
-        } else if (res.status === 200) {
-          // 받은 잎사귀 있음
-          // setLeaves(res.data)
-        }
-      } catch (err) {
-        console.error(err)
+  const fetchLeaves = async () => {
+    try {
+      setIsLoading(true)
+      const res = await getLeaves()
+      if (res.status === 404) {
+        // 받은 잎사귀 없음
+      } else if (res.status === 200) {
+        // 받은 잎사귀 있음
+        setLeaves(res.data)
       }
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setIsLoading(false)
     }
-
+  }
+  useEffect(() => {
     fetchLeaves()
   }, [])
   return (
@@ -50,13 +56,17 @@ const Leaves = () => {
               <img src={LeafIcon} alt="LeafIcon" />
             </LeafIconWrapper>
           </HeaderTitle>
-          <Refresh>
+          <Refresh onClick={handleRefresh}>
             <img src={refreshIcon} alt="refreshIcon" />
           </Refresh>
         </Header>
       </HeaderContainer>
       <LeafContent>
-        {leaves.length === 0 ? (
+        {isLoading ? (
+          <SpinnerWrapper>
+            <Spinner color={'gray'} />
+          </SpinnerWrapper>
+        ) : leaves.length === 0 ? (
           <Empty>아직 받은 잎사귀가 없어요</Empty>
         ) : (
           leaves.map((leaf, idx) => (
@@ -66,7 +76,6 @@ const Leaves = () => {
             </LeafCard>
           ))
         )}
-
         <Padding />
       </LeafContent>
     </>
@@ -75,6 +84,12 @@ const Leaves = () => {
 
 export default Leaves
 
+const SpinnerWrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`
 const HeaderContainer = styled.div`
   position: fixed;
   top: 0;
