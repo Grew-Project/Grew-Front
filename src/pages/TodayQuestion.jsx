@@ -97,8 +97,7 @@ const TodayQuestion = () => {
       try {
         const res = await getQuestionCount()
         if (res.status === 200) {
-          const count = String(res.data.length).padStart(1, '0')
-          setQuestionCount(count + 1)
+          setQuestionCount(res.data.length + 1)
         }
       } catch (err) {
         console.error(err)
