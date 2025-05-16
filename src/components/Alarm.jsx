@@ -9,6 +9,7 @@ const AlarmWrapper = styled.div`
   opacity: 0.8;
   display: flex;
   flex-direction: column;
+  z-index: 1000;
   align-items: center;
   border-radius: var(--radius-base);
 `

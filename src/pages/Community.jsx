@@ -19,6 +19,7 @@ import { ActionButton } from '../components/ActionButton'
 import { AnswerCard } from '../components/AnswerCard'
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../store/useAuthStore'
+import { Alarm } from '../components/Alarm'
 
 const menuItems = [
   { id: 'all', label: '전체' },
@@ -46,6 +47,7 @@ const Community = () => {
   const [targetNickname, setTargetNickname] = useState('')
   const [leafMessage, setLeafMessage] = useState('')
   const [flowerSentMap, setFlowerSentMap] = useState({}) // nickname → true/false
+  const [isSentLeaf, setIsSentLeaf] = useState(false)
 
   const navigate = useNavigate()
 
@@ -110,10 +112,20 @@ const Community = () => {
     }
   }
 
-  const handleSendLeaf = targetNickname => {
+  const handlClickLeafBtn = targetNickname => {
     setTargetNickname(targetNickname)
     setModalType('leaf')
     setLeafMessage('')
+  }
+
+  const handleSendLeaf = targetNickname => {
+    sendLeaf(targetNickname, nickname, leafMessage).then(() => {
+      setIsSentLeaf(true)
+      setTimeout(() => {
+        setIsSentLeaf(false)
+      }, 3000)
+    })
+    setModalType(null)
   }
 
   return (
@@ -159,7 +171,7 @@ const Community = () => {
               <ActionButton
                 icon={leafIcon}
                 text="잎사귀 보내기"
-                onClick={() => handleSendLeaf(post.nickname)}
+                onClick={() => handlClickLeafBtn(post.nickname)}
               />
             </Buttons>
             {expandedPost === post._id && (
@@ -194,12 +206,12 @@ const Community = () => {
           values={{ message: leafMessage }}
           onChange={(name, value) => setLeafMessage(value)}
           onConfirm={() => {
-            sendLeaf(targetNickname, nickname, leafMessage)
-            setModalType(null)
+            handleSendLeaf(targetNickname)
           }}
           onCancel={() => setModalType(null)}
         />
       )}
+      {isSentLeaf && <Alarm text={`${targetNickname} 님에게 잎사귀를 보냈어요!`} />}
     </>
   )
 }

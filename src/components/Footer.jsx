@@ -46,7 +46,7 @@ export const Footer = () => {
       <StyledNavLink to="/community">
         <FooterIcon src={communityIcon} alt="커뮤니티" />
       </StyledNavLink>
-      <StyledNavLink to="/answers">
+      <StyledNavLink to="/my-answers">
         <FooterIcon src={listIcon} alt="답변리스트" />
       </StyledNavLink>
       <StyledNavLink to="/mypage">
