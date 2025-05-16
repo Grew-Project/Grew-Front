@@ -2,11 +2,20 @@ import axios from 'axios'
 
 const BASE_URL = 'http://localhost:3000'
 
-export const getMyAnswers = async nickname => {
+export const getMyAnswerDetail = async nickname => {
   try {
     const body = { nickname: nickname }
     console.log(body)
     const response = await axios.get(`${BASE_URL}/api/mypage/my-answer-search?nickname=${nickname}`)
+    return response.data
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+export const getMyAnswerList = async nickname => {
+  try {
+    const response = await axios.get(`${BASE_URL}/api/mypage/my-answer-list?nickname=${nickname}`)
     return response.data
   } catch (error) {
     console.log(error.message)
