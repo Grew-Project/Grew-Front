@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
@@ -35,6 +35,7 @@ function App() {
             <Route path="/my-answers" element={<PrivateRoute element={<MyAnswers />} />} />
             <Route path="/forest" element={<PrivateRoute element={<Forest />} />} />
             <Route path="/report/:treeId" element={<PrivateRoute element={<Report />} />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
           <Route element={<AuthLayout />}>
             <Route path="/" element={<PublicRoute element={<Landing />} />} />
