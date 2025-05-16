@@ -30,4 +30,11 @@ const Wrapper = styled.div`
   padding: 52px 24px 80px 24px;
   border: 1px solid red;
   background-color: var(--color-background);
+
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
