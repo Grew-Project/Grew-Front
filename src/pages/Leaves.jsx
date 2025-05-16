@@ -6,6 +6,7 @@ import { getLeaves } from '../api/leaf'
 import goBack from '../assets/icons/goback-icon.svg'
 import LeafIcon from '../assets/icons/leaf-icon.svg'
 import refreshIcon from '../assets/icons/refresh-icon.svg'
+import Empty from '../components/Empty'
 
 const Leaves = () => {
   const [leaves, setLeaves] = useState([])
@@ -24,7 +25,7 @@ const Leaves = () => {
           // 받은 잎사귀 없음
         } else if (res.status === 200) {
           // 받은 잎사귀 있음
-          setLeaves(res.data)
+          // setLeaves(res.data)
         }
       } catch (err) {
         console.error(err)
@@ -55,12 +56,17 @@ const Leaves = () => {
         </Header>
       </HeaderContainer>
       <LeafContent>
-        {leaves.map((leaf, idx) => (
-          <LeafCard key={idx}>
-            <Nickname>{leaf.sender_nickname}</Nickname>
-            <Message>{leaf.leaf_content}</Message>
-          </LeafCard>
-        ))}
+        {leaves.length === 0 ? (
+          <Empty>아직 받은 잎사귀가 없어요</Empty>
+        ) : (
+          leaves.map((leaf, idx) => (
+            <LeafCard key={idx}>
+              <Nickname>{leaf.sender_nickname}</Nickname>
+              <Message>{leaf.leaf_content}</Message>
+            </LeafCard>
+          ))
+        )}
+
         <Padding />
       </LeafContent>
     </>
