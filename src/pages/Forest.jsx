@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import goBack from '../assets/icons/goback-icon.svg'
 import { Link, useNavigate } from 'react-router-dom'
+import Empty from '../components/Empty'
 
 import 사과나무 from '../assets/trees/사과나무4.png'
 import 벚꽃나무 from '../assets/trees/벚꽃나무4.png'
@@ -91,7 +92,7 @@ const Forest = () => {
       </HeaderContainer>
       <ForestContainer>
         {treeData.length === 0 ? (
-          <EmptyForest>아직 다 자란 나무가 없어요.</EmptyForest>
+          <Empty>아직 다 자란 나무가 없어요.</Empty>
         ) : (
           treeData.map((tree, idx) => (
             <TreeContainer to={`/report/${idx + 1}`} key={idx}>
@@ -162,13 +163,6 @@ const ForestContainer = styled.div`
 `
 const Padding = styled.div`
   height: 5rem;
-`
-const EmptyForest = styled.div`
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  color: var(--font-color-gray);
 `
 const TreeContainer = styled(Link)`
   display: flex;
