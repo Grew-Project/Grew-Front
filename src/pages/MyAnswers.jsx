@@ -1,15 +1,16 @@
 import { useEffect, useMemo, useState } from 'react'
-import TitleListItem from '../components/TitleListItem'
 import { getMyAnswerDetail } from '../api/mypage'
 import useAuthStore from '../store/useAuthStore'
 import lockIcon from '@/assets/icons/lock-icon.svg'
 import { Spinner } from '../components/Spinner'
 import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
 
 export const MyAnswers = () => {
   const [postList, setPostList] = useState([])
   const nickname = useAuthStore(state => state.nickname)
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
   const fetchMyAnswers = async () => {
     try {
@@ -40,9 +41,11 @@ export const MyAnswers = () => {
 
   useEffect(() => {
     fetchMyAnswers()
-  }, [])
+  }, [nickname])
 
-  // const handleItemClick = () => {}
+  const handleItemClick = answerId => {
+    navigate(`/my-answers/${answerId}`)
+  }
 
   return (
     <div>
@@ -58,7 +61,7 @@ export const MyAnswers = () => {
                 <MonthText>{month}월</MonthText>
                 <List>
                   {posts.map(post => (
-                    <Item key={post._id}>
+                    <Item key={post.answer_id} onClick={() => handleItemClick(post.answer_id)}>
                       <DateText>{new Date(post.created_at).getDate()}일</DateText>
                       <QuestionText>
                         {post.question_content}
@@ -77,11 +80,12 @@ export const MyAnswers = () => {
 }
 const YearText = styled.h2`
   font-size: 1rem;
+  margin-top: 1rem;
 `
 
 const MonthText = styled.h3`
   font-size: 1rem;
-  margin: 0.8rem 0 0.3rem;
+  margin: 1rem 0 0.3rem;
 `
 
 const List = styled.div`
@@ -93,9 +97,10 @@ const Item = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.7rem 0;
+  padding: 0.85rem 0;
   margin-left: 0.5rem;
   position: relative;
+  cursor: pointer;
 
   &:before {
     content: '';

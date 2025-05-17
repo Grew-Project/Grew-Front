@@ -13,6 +13,7 @@ import Leaves from './pages/Leaves'
 import { PrivateRoute, PublicRoute } from './Routes'
 import { Profile } from './pages/Profile'
 import { MyAnswers } from './pages/MyAnswers'
+import { AnswerDetail } from './pages/AnswerDetail'
 
 function App() {
   return (
@@ -31,6 +32,10 @@ function App() {
               element={<PrivateRoute element={<Profile />} />}
             />
             <Route path="/my-answers" element={<PrivateRoute element={<MyAnswers />} />} />
+            <Route
+              path="/my-answers/:answerId"
+              element={<PrivateRoute element={<AnswerDetail />} />}
+            />
           </Route>
           <Route element={<AuthLayout />}>
             <Route path="/" element={<PublicRoute element={<Landing />} />} />
