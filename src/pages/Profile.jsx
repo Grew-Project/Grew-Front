@@ -86,12 +86,12 @@ export const Profile = () => {
         <Spinner /> // 수정 예정
       ) : (
         postList.map(post => {
-          const isExpanded = expandedPost === post.created_at
+          const isExpanded = expandedPost === post.answer_id
 
           if (isExpanded) {
             return (
               <AnswerCard
-                key={post.created_at}
+                key={post.answer_id}
                 post={post}
                 showToggleIcon
                 // emotionIcon={getEmotionIcon(post.emotion_type)}
@@ -104,8 +104,8 @@ export const Profile = () => {
           return (
             <TitleListItem
               primary
-              key={post.created_at}
-              onItemClick={() => setExpandedPost(post.created_at)}
+              key={post.answer_id}
+              onItemClick={() => setExpandedPost(post.answer_id)}
               title={post.question_content}
               icon={nextIcon}
             />

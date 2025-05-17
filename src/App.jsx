@@ -13,6 +13,7 @@ import Leaves from './pages/Leaves'
 import { PrivateRoute, PublicRoute } from './Routes'
 import { Profile } from './pages/Profile'
 import { MyAnswers } from './pages/MyAnswers'
+import { AnswerDetail } from './pages/AnswerDetail'
 import Forest from './pages/Forest'
 import Report from './pages/Report'
 
@@ -33,6 +34,10 @@ function App() {
               element={<PrivateRoute element={<Profile />} />}
             />
             <Route path="/my-answers" element={<PrivateRoute element={<MyAnswers />} />} />
+            <Route
+              path="/my-answers/:answerId"
+              element={<PrivateRoute element={<AnswerDetail />} />}
+            />
             <Route path="/forest" element={<PrivateRoute element={<Forest />} />} />
             <Route path="/report/:treeId" element={<PrivateRoute element={<Report />} />} />
             <Route path="*" element={<Navigate to="/" replace />} />
