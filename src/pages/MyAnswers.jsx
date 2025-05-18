@@ -2,9 +2,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { getMyAnswerDetail } from '../api/mypage'
 import useAuthStore from '../store/useAuthStore'
 import lockIcon from '@/assets/icons/lock-icon.svg'
-import { Spinner } from '../components/Spinner'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
+import { Header } from '../components/Header'
+import { Loading } from '../components/Loading'
 
 export const MyAnswers = () => {
   const [postList, setPostList] = useState([])
@@ -48,9 +49,11 @@ export const MyAnswers = () => {
   }
 
   return (
-    <div>
+    <>
+      <Header center={<span>내 답변 리스트</span>} />
+
       {isLoading ? (
-        <Spinner />
+        <Loading />
       ) : (
         Object.entries(groupByYearMonth).map(([year, months]) => (
           <div key={year}>
@@ -75,7 +78,7 @@ export const MyAnswers = () => {
           </div>
         ))
       )}
-    </div>
+    </>
   )
 }
 const YearText = styled.h2`

@@ -5,13 +5,11 @@ import useAuthStore from '../store/useAuthStore'
 import { getMyAnswerDetail, updateMyAnswer } from '../api/mypage'
 import {
   AnswerTitle,
-  Back,
   ButtonWrapper,
   CheckBoxIconWrapper,
   CheckBoxWrapper,
   HiddenCheckBox,
   LengthCheck,
-  PageTitle,
   StyledAnswerForm,
   TextareaWrapper,
   UncheckedBox,
@@ -19,7 +17,6 @@ import {
 import { Spinner } from '../components/Spinner'
 import { Button } from '../components/Button'
 import { Textarea } from '../components/TextArea'
-import goBack from '@/assets/icons/goback-icon.svg'
 import angerFace from '../assets/faces/anger-face.svg'
 import confusionFace from '../assets/faces/confusion-face.svg'
 import happinessFace from '../assets/faces/happiness-face.svg'
@@ -28,6 +25,8 @@ import sadnessFace from '../assets/faces/sadness-face.svg'
 import checkBoxIcon from '@/assets/icons/checkbox-icon.svg'
 import lockIcon from '@/assets/icons/lock-icon.svg'
 import penIcon from '@/assets/icons/pen-icon.svg'
+import { Header } from '../components/Header'
+import { Loading } from '../components/Loading'
 
 export const AnswerDetail = () => {
   const { answerId } = useParams()
@@ -192,21 +191,22 @@ export const AnswerDetail = () => {
 
   return (
     <>
-      <Back>
-        <img src={goBack} alt="back" />
-      </Back>
-
       {isLoading ? (
-        <Spinner />
+        <>
+          <Header />
+          <Loading />
+        </>
       ) : (
         <>
-          <PageTitle>
-            <div>#{post.question_id}</div>
-            <div>번째 질문</div>
-            <div>{formattedDate(post.created_at)}</div>
-            {!post.is_public && <img src={lockIcon} alt="비공개" />}
-          </PageTitle>
-
+          <Header
+            left={
+              <span>
+                #{post.question_id} <strong>번째 질문</strong>{' '}
+                <span className="date">{formattedDate(post.created_at)}</span>
+                {!post.is_public && <img src={lockIcon} alt="비공개" className="lock-icon" />}
+              </span>
+            }
+          />
           {isEdit ? editAnswer() : viewAnswer()}
         </>
       )}

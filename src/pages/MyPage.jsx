@@ -6,6 +6,7 @@ import { InputModal } from '../components/modal/InputModal'
 import { ConfirmModal } from '../components/modal/ConfirmModal'
 import { changePassword } from '../api/mypage'
 import useAuthStore from '../store/useAuthStore'
+import { Header } from '../components/Header'
 
 const MyPage = () => {
   const logout = useAuthStore(state => state.logout)
@@ -88,7 +89,8 @@ const MyPage = () => {
   }
 
   return (
-    <div>
+    <>
+      <Header center={<span>마이페이지</span>} />
       {menuList.map((menu, index) => (
         <TitleListItem
           key={index}
@@ -123,7 +125,7 @@ const MyPage = () => {
           onConfirm={handleLogoutClick}
         />
       )}
-    </div>
+    </>
   )
 }
 
