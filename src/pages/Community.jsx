@@ -7,12 +7,10 @@ import flowerIcon from '@/assets/icons/flower-icon.svg'
 import leafIcon from '@/assets/icons/leaf-icon.svg'
 import profileIcon from '@/assets/icons/profile-icon.svg'
 import refreshIcon from '@/assets/icons/refresh-icon.svg'
-import gobackIcon from '@/assets/icons/goback-icon.svg'
 
 import styled from 'styled-components'
 import { useEffect, useState } from 'react'
 import { checkFlower, getPostList, sendFlower, sendLeaf } from '../api/community'
-import { Spinner } from '../components/Spinner'
 import { InputModal } from '../components/modal/InputModal'
 import { MessageModal } from '../components/modal/MessageModal'
 import { ActionButton } from '../components/ActionButton'
@@ -20,6 +18,8 @@ import { AnswerCard } from '../components/AnswerCard'
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../store/useAuthStore'
 import { Alarm } from '../components/Alarm'
+import { Header } from '../components/Header'
+import { Loading } from '../components/Loading'
 
 const menuItems = [
   { id: 'all', label: '전체' },
@@ -60,7 +60,7 @@ const Community = () => {
       setPostList(data)
       setTimeout(() => {
         setIsLoading(false)
-      }, 100)
+      }, 1000)
     } catch (error) {
       console.log(error.message) // 수정 예정
     }
@@ -130,15 +130,15 @@ const Community = () => {
 
   return (
     <>
-      <Header>
-        <button>
-          <img src={gobackIcon} alt="뒤로가기" />
-        </button>
-        <h2>커뮤니티</h2>
-        <button onClick={fetchPostList}>
-          <img src={refreshIcon} alt="새로고침" />
-        </button>
-      </Header>
+      <Header
+        center={<span>커뮤니티</span>}
+        right={
+          <button onClick={fetchPostList}>
+            <img src={refreshIcon} alt="새로고침" />
+          </button>
+        }
+      />
+
       <TabMenu>
         {menuItems.map(item => (
           <TabButton
@@ -151,7 +151,7 @@ const Community = () => {
         ))}
       </TabMenu>
       {isLoading ? (
-        <Spinner /> // 수정 예정
+        <Loading />
       ) : (
         filteredPosts.map(post => (
           <AnswerCard
@@ -275,10 +275,4 @@ const ProfileButton = styled.button`
   display: flex;
   margin: auto;
   margin-top: 0.6rem;
-`
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: var(--fs20);
 `

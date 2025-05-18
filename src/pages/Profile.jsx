@@ -1,17 +1,19 @@
+import styled from 'styled-components'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { ActionButton } from '../components/ActionButton'
+
+import useAuthStore from '../store/useAuthStore'
+import { checkFlower, getUserAnswers, sendFlower, sendLeaf } from '../api/community'
 import flowerIcon from '@/assets/icons/flower-icon.svg'
 import leafIcon from '@/assets/icons/leaf-icon.svg'
-import { checkFlower, getUserAnswers, sendFlower, sendLeaf } from '../api/community'
+import nextIcon from '@/assets/icons/next-icon.svg'
 import { InputModal } from '../components/modal/InputModal'
 import { MessageModal } from '../components/modal/MessageModal'
-import styled from 'styled-components'
+import { ActionButton } from '../components/ActionButton'
 import { AnswerCard } from '../components/AnswerCard'
-import nextIcon from '@/assets/icons/next-icon.svg'
-import { Spinner } from '../components/Spinner'
 import TitleListItem from '../components/TitleListItem'
-import useAuthStore from '../store/useAuthStore'
+import { Header } from '../components/Header'
+import { Loading } from '../components/Loading'
 
 export const Profile = () => {
   const nickname = useAuthStore(state => state.nickname)
@@ -67,7 +69,9 @@ export const Profile = () => {
   }
 
   return (
-    <div>
+    <>
+      <Header />
+
       <Name>{profileNickname}</Name>
       <Buttons>
         <ActionButton
@@ -83,7 +87,7 @@ export const Profile = () => {
         />
       </Buttons>
       {isLoading ? (
-        <Spinner /> // 수정 예정
+        <Loading />
       ) : (
         postList.map(post => {
           const isExpanded = expandedPost === post.answer_id
@@ -138,7 +142,7 @@ export const Profile = () => {
           onCancel={() => setModalType(null)}
         />
       )}
-    </div>
+    </>
   )
 }
 
