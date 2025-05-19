@@ -20,6 +20,7 @@ import useAuthStore from '../store/useAuthStore'
 import { Alarm } from '../components/Alarm'
 import { Header } from '../components/Header'
 import { Loading } from '../components/Loading'
+import Empty from '../components/Empty'
 
 const menuItems = [
   { id: 'all', label: '전체' },
@@ -58,11 +59,11 @@ const Community = () => {
       setIsLoading(true)
       const data = await getPostList()
       setPostList(data)
-      setTimeout(() => {
-        setIsLoading(false)
-      }, 1000)
+      setTimeout(() => {}, 500)
     } catch (error) {
       console.log(error.message) // 수정 예정
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -119,7 +120,7 @@ const Community = () => {
   }
 
   const handleSendLeaf = targetNickname => {
-    sendLeaf(targetNickname, nickname, leafMessage).then(() => {
+    sendLeaf(nickname, targetNickname, leafMessage).then(() => {
       setIsSentLeaf(true)
       setTimeout(() => {
         setIsSentLeaf(false)
@@ -152,6 +153,8 @@ const Community = () => {
       </TabMenu>
       {isLoading ? (
         <Loading />
+      ) : filteredPosts.length === 0 ? (
+        <Empty>아직 작성된 글이 없어요</Empty>
       ) : (
         filteredPosts.map(post => (
           <AnswerCard
@@ -185,7 +188,6 @@ const Community = () => {
             )}
           </AnswerCard>
         ))
-        // .slice(0, 7)
       )}
       {modalType === 'flower' && (
         <MessageModal
