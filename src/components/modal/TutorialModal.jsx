@@ -22,7 +22,7 @@ import { Pagination, Navigation } from 'swiper/modules'
 import styled from 'styled-components'
 
 const ModalOverlay = styled.div`
-  z-index: 99;
+  z-index: 999;
   display: ${({ visible }) => (visible ? 'flex' : 'none')};
   position: fixed;
   top: 50%;

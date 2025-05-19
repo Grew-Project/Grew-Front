@@ -251,6 +251,7 @@ const Help = styled.div`
   position: absolute;
   right: 0;
   padding: 0.5rem;
+  z-index: 999;
   &:hover {
     cursor: pointer;
   }
