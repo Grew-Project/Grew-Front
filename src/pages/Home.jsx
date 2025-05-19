@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { InputTextModal } from '../components/modal/InputTextModal'
 import { getHomeInfo, updateTreeName } from '../api/home'
+import TutorialModal from '../components/modal/TutorialModal'
 
 const Home = () => {
   const [isAnswered, setIsAnswered] = useState(false)
@@ -20,6 +21,7 @@ const Home = () => {
   const [answeredCount, setAnsweredCount] = useState(0)
   const [treeType, setTreeType] = useState('사과나무')
   const [isLoading, setIsLoading] = useState(true)
+  const [showTutorial, setShowTutorial] = useState(false)
   const navigate = useNavigate()
 
   const treeImages = import.meta.glob(`../assets/trees/*.png`, {
@@ -91,6 +93,9 @@ const Home = () => {
   const handleLeafClick = () => {
     navigate('/Leaves')
   }
+  const openTutorialModal = () => {
+    setShowTutorial(true)
+  }
 
   //api 연동
   useEffect(() => {
@@ -124,7 +129,7 @@ const Home = () => {
         </GrassWrapper>
       </Background>
       <Container>
-        <Help>
+        <Help onClick={openTutorialModal}>
           <img src={help} alt="help" />
         </Help>
         <ProgressWrapper>
@@ -182,7 +187,6 @@ const Home = () => {
           </TodayQuestion>
         )}
       </Container>
-      {/* <InputTextModal message={'나무 이름을 변경해주세요'} /> */}
       {isModalOpen && (
         <InputTextModal
           title={'나무 이름을 입력하세요'}
@@ -193,6 +197,7 @@ const Home = () => {
           maxLength={maxLength}
         />
       )}
+      <TutorialModal visible={showTutorial} onClose={() => setShowTutorial(false)} />
     </>
   )
 }
