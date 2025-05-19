@@ -5,10 +5,11 @@ import help from '../assets/icons/main-help.svg'
 import leaf from '../assets/icons/leaf-icon.svg'
 import flower from '../assets/icons/flower-icon.svg'
 import sign from '../assets/main-sign.png'
+import rain from '../assets/weather/rain.gif'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { InputTextModal } from '../components/modal/InputTextModal'
-import { getHomeInfo, updateTreeName } from '../api/home'
+import { getCurrentWeather, getHomeInfo, updateTreeName } from '../api/home'
 
 const Home = () => {
   const [isAnswered, setIsAnswered] = useState(false)
@@ -21,6 +22,7 @@ const Home = () => {
   const [treeType, setTreeType] = useState('사과나무')
   const [isLoading, setIsLoading] = useState(true)
   const navigate = useNavigate()
+  const [weatherType, setWeatherType] = useState('Clear')
 
   const treeImages = import.meta.glob(`../assets/trees/*.png`, {
     eager: true,
@@ -114,10 +116,31 @@ const Home = () => {
     fetchHomeInfo()
   }, [])
 
+  const normalizedWeather = ['Clouds', 'Rain'].includes(weatherType) ? 'Cloudy' : 'Clear'
+
+  useEffect(() => {
+    const fetchWeather = async () => {
+      try {
+        const response = await getCurrentWeather()
+        setWeatherType(response.weather[0].main)
+        console.log(response.weather[0].main)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchWeather()
+  }, [])
+
   return (
     <>
-      <Background>
-        <Cloud src={cloud} alt="cloud" />
+      <Background weather={normalizedWeather}>
+        {/* Rain일 경우 rain gif도 함께 렌더링 */}
+        {normalizedWeather === 'Cloudy' && weatherType === 'Rain' && (
+          <RainGif src={rain} alt="비" />
+        )}
+
+        <Cloud $blur={normalizedWeather === 'Cloudy'} src={cloud} alt="cloud" />
         <GrassWrapper>
           <Grass src={grass} alt="grass" />
           <Ground />
@@ -199,15 +222,35 @@ const Home = () => {
 
 export default Home
 
+const getGradient = weather => {
+  if (weather === 'Cloudy' || weather === 'Rain') {
+    return 'linear-gradient(145deg, #eceff1 10%, #cfd8dc 23%, #b0bec5 99%)'
+  } else {
+    return 'linear-gradient(145deg, #d1f3ff 10%, #ffffff 23%, #a9e8ff 99%)'
+  }
+}
+
+// const Background = styled.div`
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+//   background: linear-gradient(145deg, #d1f3ff 10%, #ffffff 23%, #a9e8ff 99%);
+//   overflow: hidden;
+// `
+
 const Background = styled.div`
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(145deg, #d1f3ff 10%, #ffffff 23%, #a9e8ff 99%);
+  background: ${({ weather }) => getGradient(weather)};
+  transition: background 0.5s ease;
   overflow: hidden;
 `
+
 const GrassWrapper = styled.div`
   position: absolute;
   bottom: 0;
@@ -225,12 +268,12 @@ const Ground = styled.div`
   height: 200px;
   background-color: #96c93c;
 `
-const Cloud = styled.img`
-  position: absolute;
-  width: 100%;
-  height: 215px;
-  object-fit: cover;
-`
+// const Cloud = styled.img`
+//   position: absolute;
+//   width: 100%;
+//   height: 215px;
+//   object-fit: cover;
+// `
 
 const Container = styled.div`
   width: 100%;
@@ -393,4 +436,20 @@ const TodayQuestion = styled.div`
     font-size: var(--fs12);
     color: var(--font-color-gray);
   }
+`
+const RainGif = styled.img`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+`
+
+const Cloud = styled.img`
+  position: absolute;
+  width: 100%;
+  height: 215px;
+  object-fit: cover;
+  filter: ${({ $blur }) => ($blur ? 'blur(2px) brightness(0.85)' : 'none')};
+  transition: filter 0.3s ease;
 `
