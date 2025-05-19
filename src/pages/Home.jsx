@@ -23,7 +23,7 @@ const Home = () => {
     queryFn: getHomeInfo,
     staleTime: 1000 * 60 * 5,
     // staleTime: 0,
-    cacheTime: 0,
+    // cacheTime: 0,
     // refetchOnWindowFocus: false,
   })
 
