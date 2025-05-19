@@ -15,7 +15,7 @@ import TitleListItem from '../components/TitleListItem'
 import { Header } from '../components/Header'
 import { Loading } from '../components/Loading'
 
-export const Profile = () => {
+const Profile = () => {
   const nickname = useAuthStore(state => state.nickname)
 
   const { profileNickname } = useParams()
@@ -145,6 +145,8 @@ export const Profile = () => {
     </>
   )
 }
+
+export default Profile
 
 const Name = styled.h2`
   display: flex;

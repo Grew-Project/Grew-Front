@@ -28,7 +28,7 @@ import penIcon from '@/assets/icons/pen-icon.svg'
 import { Header } from '../components/Header'
 import { Loading } from '../components/Loading'
 
-export const AnswerDetail = () => {
+const AnswerDetail = () => {
   const { answerId } = useParams()
   const nickname = useAuthStore(state => state.nickname)
   const [isEdit, setIsEdit] = useState(false)
@@ -213,6 +213,8 @@ export const AnswerDetail = () => {
     </>
   )
 }
+
+export default AnswerDetail
 
 const ViewContainer = styled.div`
   height: calc(100% - 55px);
