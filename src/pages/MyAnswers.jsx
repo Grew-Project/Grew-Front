@@ -130,6 +130,13 @@ const QuestionText = styled.div`
   gap: 0.3rem;
   font-weight: bold;
 
+  span {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   img {
     width: 12px;
     margin-left: 0.5rem;
