@@ -8,7 +8,7 @@ import { Header } from '../components/Header'
 import { Loading } from '../components/Loading'
 import Empty from '../components/Empty'
 
-export const MyAnswers = () => {
+const MyAnswers = () => {
   const [postList, setPostList] = useState([])
   const nickname = useAuthStore(state => state.nickname)
   const [isLoading, setIsLoading] = useState(false)
@@ -84,6 +84,9 @@ export const MyAnswers = () => {
     </>
   )
 }
+
+export default MyAnswers
+
 const YearText = styled.h2`
   font-size: 1rem;
   margin-top: 1rem;
