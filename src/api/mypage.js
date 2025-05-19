@@ -23,7 +23,7 @@ export const getMyAnswerList = async nickname => {
 
 export const changePassword = async (currentPw, newPw, id) => {
   try {
-    const response = await axios.put(`${BASE_URL}/api/auth/login`, {
+    const response = await axios.put(`${BASE_URL}/api/mypage/my-password-update`, {
       user_id: id,
       password: newPw,
     })
