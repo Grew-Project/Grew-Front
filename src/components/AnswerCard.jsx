@@ -42,6 +42,8 @@ const AnswerPreview = styled.p`
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: pre-wrap;
+  word-break: break-word;
 
   ${({ expanded }) => (expanded ? '' : '-webkit-line-clamp: 2;')}
 `

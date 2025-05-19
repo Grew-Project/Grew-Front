@@ -223,12 +223,14 @@ const ContentArea = styled.div`
   font-size: ${props => props.fontSize || 'var(--fs15)'};
   transition: 0.2s;
   margin-top: 1rem;
+  white-space: pre-wrap;
+  word-break: break-word;
 `
 
 const ContentWrapper = styled.div`
   width: 100%;
   flex: 1;
-  height: calc(100% - 350px);
+  height: 80%;
 `
 
 const UpdateBtn = styled.div`
@@ -249,7 +251,7 @@ const EmotionDisplayGroup = styled.div`
   display: flex;
   justify-content: center;
   gap: 2.5rem;
-  margin-top: 2rem;
+  margin: 2rem 0;
 `
 
 const EmotionDisplayItem = styled.div`

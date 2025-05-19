@@ -62,10 +62,14 @@ export const StyledAnswerForm = styled.form`
 export const AnswerTitle = styled.div`
   font-size: var(--fs20);
   font-weight: bold;
-  padding: 1.5rem 0 1rem 0;
+  padding-bottom: 1rem;
   word-break: keep-all;
   display: flex;
   justify-content: center;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  text-align: center;
 `
 export const LengthCheck = styled.div`
   color: var(--font-color-gray);

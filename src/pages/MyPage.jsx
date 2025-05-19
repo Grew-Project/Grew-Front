@@ -22,7 +22,6 @@ const MyPage = () => {
     { name: '내 답변 리스트', route: '/my-answers' },
     { name: '마음숲/감정리포트', route: '/forest' },
     { name: '비밀번호 변경', modalType: 'password' },
-    { name: '고객센터', route: 'support' },
     { name: '로그아웃', modalType: 'logout' },
   ]
 
