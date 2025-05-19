@@ -254,7 +254,7 @@ const StyledEmotionForm = styled.form`
 
 const EmotionTitle = styled.div`
   font-size: var(--fs15);
-  font-weight: 100;
+  font-weight: bold;
   display: flex;
   justify-content: center;
 `
