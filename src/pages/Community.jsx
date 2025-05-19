@@ -273,8 +273,8 @@ const Buttons = styled.div`
   }
 `
 
-const ProfileButton = styled.button`
+const ProfileButton = styled.div`
   display: flex;
-  margin: auto;
+  justify-content: center;
   margin-top: 0.6rem;
 `
