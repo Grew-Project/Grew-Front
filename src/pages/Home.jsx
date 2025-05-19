@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom'
 import { InputTextModal } from '../components/modal/InputTextModal'
 import { getHomeInfo, updateTreeName } from '../api/home'
 import TutorialModal from '../components/modal/TutorialModal'
+import { MessageModal } from '../components/modal/MessageModal'
+import { TreeAddedModal } from '../components/modal/TreeAddedModal'
 
 const Home = () => {
   const [isAnswered, setIsAnswered] = useState(false)
@@ -197,6 +199,9 @@ const Home = () => {
           maxLength={maxLength}
         />
       )}
+      {answeredCount === 16 && (
+        <TreeAddedModal text={`${treeType}가 마음숲에 추가됐어요!`}></TreeAddedModal>
+      )}
       <TutorialModal visible={showTutorial} onClose={() => setShowTutorial(false)} />
     </>
   )
@@ -256,6 +261,8 @@ const ProgressWrapper = styled.div`
   flex-direction: column;
   gap: 12px;
   padding-top: 50px;
+  z-index: 99;
+  position: relative;
 `
 const ProgressBarWrapper = styled.div`
   display: flex;
