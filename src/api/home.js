@@ -119,3 +119,38 @@ export const updateTreeName = async treeName => {
     console.error(error)
   }
 }
+
+const API_KEY = import.meta.env.VITE_WEATHER_API_KEY
+
+const getWeatherByCoords = async (lat, lon) => {
+  try {
+    const response = await axios.get(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+    )
+    return response.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+// 현재 위치 날씨 정보 가져오기
+export const getCurrentWeather = async () => {
+  return new Promise((resolve, reject) => {
+    // 현재 좌표 가져오기
+    navigator.geolocation.getCurrentPosition(
+      async position => {
+        try {
+          const { latitude, longitude } = position.coords
+          const response = await getWeatherByCoords(latitude, longitude)
+          resolve(response)
+        } catch (error) {
+          console.log(error)
+        }
+      },
+      err => {
+        console.log('좌표 가져오기 실패', err)
+        reject(err)
+      }
+    )
+  })
+}

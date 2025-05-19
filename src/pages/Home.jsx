@@ -5,9 +5,12 @@ import help from '../assets/icons/main-help.svg'
 import leaf from '../assets/icons/leaf-icon.svg'
 import flower from '../assets/icons/flower-icon.svg'
 import sign from '../assets/main-sign.png'
+import rain from '../assets/weather/rain.gif'
+import snow from '../assets/weather/snow.gif'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { InputTextModal } from '../components/modal/InputTextModal'
+import { getCurrentWeather, getHomeInfo, updateTreeName } from '../api/home'
 import { getHomeInfo, updateTreeName } from '../api/home'
 import TutorialModal from '../components/modal/TutorialModal'
 import { TreeAddedModal } from '../components/modal/TreeAddedModal'
@@ -26,6 +29,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [showTutorial, setShowTutorial] = useState(false)
   const navigate = useNavigate()
+  const [weatherType, setWeatherType] = useState('Clear')
 
   const sortedTreeImages = getSortedTreeImages(treeType)
 
@@ -98,10 +102,36 @@ const Home = () => {
     fetchHomeInfo()
   }, [])
 
+  function normalizeWeather(weather) {
+    if (['Rain', 'Thunderstorm', 'Drizzle'].includes(weather)) {
+      return 'Rain'
+    }
+    if (weather === 'Clouds' || weather === 'Snow') {
+      return weather
+    }
+    return 'Clear'
+  }
+
+  useEffect(() => {
+    const fetchWeather = async () => {
+      try {
+        const response = await getCurrentWeather()
+        setWeatherType(normalizeWeather(response.data.weather[0].main))
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchWeather()
+  }, [])
+
   return (
     <>
-      <Background>
-        <Cloud src={cloud} alt="cloud" />
+      <Background weather={weatherType}>
+        <Cloud $blur={weatherType === 'Clouds' || weatherType === 'Rain'} src={cloud} alt="cloud" />
+        {weatherType === 'Rain' && <BackgroundGif src={rain} alt="비" />}
+        {weatherType === 'Snow' && <BackgroundGif src={snow} alt="눈" />}
+
         <GrassWrapper>
           <Grass src={grass} alt="grass" />
           <Ground />
@@ -186,15 +216,43 @@ const Home = () => {
 
 export default Home
 
+const getGradient = weather => {
+  // if (weather === 'Clouds' || weather === 'Rain') {
+  //   return 'linear-gradient(145deg, #eceff1 10%, #cfd8dc 23%, #b0bec5 99%)'
+  // }
+  //
+  if (weather === 'Clouds') {
+    return 'linear-gradient(145deg, #eceff1 10%, #cfd8dc 23%, #b0bec5 99%);'
+  } else if (weather === 'Rain') {
+    return 'linear-gradient(145deg, #a0bacc 10%, #c2d3dd 23%, #dfe9ef 99%);'
+  } else if (weather === 'Snow') {
+    return 'linear-gradient(145deg, #e0e0e0 0%, #f5f5f5 50%, #ffffff 100%);'
+  } else {
+    return 'linear-gradient(145deg, #d1f3ff 10%, #ffffff 23%, #a9e8ff 99%)'
+  }
+}
+
+// const Background = styled.div`
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+//   background: linear-gradient(145deg, #d1f3ff 10%, #ffffff 23%, #a9e8ff 99%);
+//   overflow: hidden;
+// `
+
 const Background = styled.div`
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(145deg, #d1f3ff 10%, #ffffff 23%, #a9e8ff 99%);
+  background: ${({ weather }) => getGradient(weather)};
+  transition: background 0.5s ease;
   overflow: hidden;
 `
+
 const GrassWrapper = styled.div`
   position: absolute;
   bottom: 0;
@@ -212,12 +270,12 @@ const Ground = styled.div`
   height: 200px;
   background-color: #96c93c;
 `
-const Cloud = styled.img`
-  position: absolute;
-  width: 100%;
-  height: 215px;
-  object-fit: cover;
-`
+// const Cloud = styled.img`
+//   position: absolute;
+//   width: 100%;
+//   height: 215px;
+//   object-fit: cover;
+// `
 
 const Container = styled.div`
   width: 100%;
@@ -383,4 +441,22 @@ const TodayQuestion = styled.div`
     font-size: var(--fs12);
     color: var(--font-color-gray);
   }
+`
+
+const BackgroundGif = styled.img`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+`
+
+const Cloud = styled.img`
+  position: absolute;
+  width: 100%;
+  height: 215px;
+  object-fit: cover;
+
+  filter: ${({ $blur }) => ($blur ? 'blur(2px) brightness(0.85)' : 'none')};
+  transition: filter 0.3s ease;
 `
