@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import grass from '../assets/main-grass.svg'
 import cloud from '../assets/main-cloud.png'
 import help from '../assets/icons/main-help.svg'
@@ -381,6 +381,16 @@ const Counter = styled.div`
   justify-content: center;
   align-items: center;
 `
+const grow = keyframes`
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+`
 const Tree = styled.div`
   position: absolute;
   bottom: 85px;
@@ -391,6 +401,8 @@ const Tree = styled.div`
   display: flex;
   justify-content: center;
   img {
+    animation: ${grow} 1s ease forwards;
+    transform-origin: bottom center;
     &:hover {
       cursor: ${({ $isAnswered }) => ($isAnswered ? 'default' : 'pointer')};
     }
