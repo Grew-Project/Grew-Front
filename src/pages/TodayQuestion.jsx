@@ -14,8 +14,11 @@ import sadnessFace from '../assets/faces/sadness-face.svg'
 import goBack from '../assets/icons/goback-icon.svg'
 import checkBoxIcon from '../assets/icons/checkbox-icon.svg'
 import { Spinner } from '../components/Spinner'
+import { useQueryClient } from '@tanstack/react-query'
 
 const TodayQuestion = () => {
+  const queryClient = useQueryClient()
+
   const [currentStep, setCurrentStep] = useState('selectEmotion') //enterQuestion
   const [formData, setFormData] = useState({
     questionId: 0,
@@ -61,6 +64,7 @@ const TodayQuestion = () => {
           !formData.isPrivate
         )
         if (response.status === 201) {
+          queryClient.invalidateQueries(['homeInfo'])
           navigate('/home')
         }
       } catch (err) {
