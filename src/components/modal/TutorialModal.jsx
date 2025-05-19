@@ -45,6 +45,13 @@ const ModalOverlay = styled.div`
   .swiper-pagination-bullet-active {
     background: var(--color-secondary);
   }
+  .swiper-pagination-fraction,
+  .swiper-pagination-custom,
+  .swiper-horizontal > .swiper-pagination-bullets,
+  .swiper-pagination-bullets.swiper-pagination-horizontal {
+    top: 1rem;
+    bottom: 37rem;
+  }
 `
 const Image = styled.img`
   width: 100%;
