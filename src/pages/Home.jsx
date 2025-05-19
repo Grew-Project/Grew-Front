@@ -165,7 +165,7 @@ const Home = () => {
           </NotificationIcon>
         </Notification>
         {!isLoading && (
-          <Tree onClick={isAnswered ? undefined : handleTreeClick} $isAnswered={isAnswered}>
+          <Tree onClick={isAnswered ? handleTreeClick : handleTreeClick} $isAnswered={isAnswered}>
             <img src={sortedTreeImages[currentStage]} alt="나무 이미지" />
           </Tree>
         )}
