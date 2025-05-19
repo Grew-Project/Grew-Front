@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import grass from '../assets/main-grass.svg'
 import cloud from '../assets/main-cloud.png'
 import help from '../assets/icons/main-help.svg'
@@ -15,8 +15,18 @@ import TutorialModal from '../components/modal/TutorialModal'
 import { TreeAddedModal } from '../components/modal/TreeAddedModal'
 import { calculateRemainingToNextStage, calculateStage } from '../utils/treeState'
 import getSortedTreeImages from '../utils/getSortedTreeImages'
+import { useQuery } from '@tanstack/react-query'
 
 const Home = () => {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['homeInfo'],
+    queryFn: getHomeInfo,
+    staleTime: 1000 * 60 * 5,
+    // staleTime: 0,
+    cacheTime: 0,
+    // refetchOnWindowFocus: false,
+  })
+
   const [isAnswered, setIsAnswered] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [treeName, setTreeName] = useState('')
@@ -25,7 +35,7 @@ const Home = () => {
   const [flowerCount, setFlowerCount] = useState(0)
   const [answeredCount, setAnsweredCount] = useState(0)
   const [treeType, setTreeType] = useState('사과나무')
-  const [isLoading, setIsLoading] = useState(true)
+  // const [isLoading, setIsLoading] = useState(true)
   const [showTutorial, setShowTutorial] = useState(false)
   const navigate = useNavigate()
   const [weatherType, setWeatherType] = useState('Clear')
@@ -80,26 +90,37 @@ const Home = () => {
   }
 
   //api 연동
+  // useEffect(() => {
+  //   const fetchHomeInfo = async () => {
+  //     try {
+  //       const res = await getHomeInfo()
+  //       setAnsweredCount(res.answerCount)
+  //       setLeafCount(res.leafCount)
+  //       setFlowerCount(res.flowerCount)
+  //       setTreeType(res.treeType)
+  //       setTreeName(res.treeName)
+  //       setTreeNameChange(res.treeName)
+  //       setIsAnswered(res.isAnswered)
+  //     } catch (err) {
+  //       console.error(err)
+  //     } finally {
+  //       setIsLoading(false)
+  //     }
+  //   }
+  //   fetchHomeInfo()
+  // }, [])
   useEffect(() => {
-    const fetchHomeInfo = async () => {
-      try {
-        const res = await getHomeInfo()
-        setAnsweredCount(res.answerCount)
-        setLeafCount(res.leafCount)
-        setFlowerCount(res.flowerCount)
-        setTreeType(res.treeType)
-        setTreeName(res.treeName)
-        setTreeNameChange(res.treeName)
-        setIsAnswered(res.isAnswered)
-      } catch (err) {
-        console.error(err)
-      } finally {
-        setIsLoading(false)
-      }
+    if (data) {
+      setAnsweredCount(data.answerCount)
+      setLeafCount(data.leafCount)
+      setFlowerCount(data.flowerCount)
+      setTreeType(data.treeType)
+      setTreeName(data.treeName)
+      setTreeNameChange(data.treeName)
+      setIsAnswered(data.isAnswered)
+      // setIsLoading(false)
     }
-
-    fetchHomeInfo()
-  }, [])
+  }, [data])
 
   function normalizeWeather(weather) {
     if (['Rain', 'Thunderstorm', 'Drizzle'].includes(weather)) {
@@ -381,6 +402,16 @@ const Counter = styled.div`
   justify-content: center;
   align-items: center;
 `
+const grow = keyframes`
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+`
 const Tree = styled.div`
   position: absolute;
   bottom: 85px;
@@ -391,6 +422,8 @@ const Tree = styled.div`
   display: flex;
   justify-content: center;
   img {
+    animation: ${grow} 1s ease forwards;
+    transform-origin: bottom center;
     &:hover {
       cursor: ${({ $isAnswered }) => ($isAnswered ? 'default' : 'pointer')};
     }
