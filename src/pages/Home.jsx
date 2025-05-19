@@ -11,6 +11,11 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { InputTextModal } from '../components/modal/InputTextModal'
 import { getCurrentWeather, getHomeInfo, updateTreeName } from '../api/home'
+import { getHomeInfo, updateTreeName } from '../api/home'
+import TutorialModal from '../components/modal/TutorialModal'
+import { TreeAddedModal } from '../components/modal/TreeAddedModal'
+import { calculateRemainingToNextStage, calculateStage } from '../utils/treeState'
+import getSortedTreeImages from '../utils/getSortedTreeImages'
 
 const Home = () => {
   const [isAnswered, setIsAnswered] = useState(false)
@@ -22,40 +27,17 @@ const Home = () => {
   const [answeredCount, setAnsweredCount] = useState(0)
   const [treeType, setTreeType] = useState('사과나무')
   const [isLoading, setIsLoading] = useState(true)
+  const [showTutorial, setShowTutorial] = useState(false)
   const navigate = useNavigate()
   const [weatherType, setWeatherType] = useState('Clear')
 
-  const treeImages = import.meta.glob(`../assets/trees/*.png`, {
-    eager: true,
-    import: 'default',
-  })
-  const sortedTreeImages = Object.entries(treeImages)
-    .filter(([path]) => path.includes(treeType))
-    .sort(([a], [b]) => {
-      const regex = new RegExp(`${treeType}(\\d+)`)
-      const numA = parseInt(a.match(regex)?.[1] || '0')
-      const numB = parseInt(b.match(regex)?.[1] || '0')
-      return numA - numB
-    })
-    .map(([, value]) => value)
+  const sortedTreeImages = getSortedTreeImages(treeType)
 
-  const TOTAL_QUESTIONS = 16 // 총 질문 수
-  const MAX_STAGE = 4 // 총 단계 수 (나무 1~4단계)
-  const QUESTIONS_PER_STAGE = TOTAL_QUESTIONS / MAX_STAGE // 단계별 질문 수 = 4
+  const TOTAL_QUESTIONS = 16
+  const MAX_STAGE = 4
 
-  const calculateStage = answeredCount => {
-    return Math.min(Math.floor(answeredCount / QUESTIONS_PER_STAGE) + 1, MAX_STAGE)
-  }
-  const calculateRemainingToNextStage = answeredCount => {
-    const currentStage = calculateStage(answeredCount)
-    const nextStageThreshold = currentStage * QUESTIONS_PER_STAGE
-
-    if (answeredCount >= TOTAL_QUESTIONS) return 0
-    return nextStageThreshold - answeredCount
-  }
-
-  const currentStage = calculateStage(answeredCount) - 1
-  const remaining = calculateRemainingToNextStage(answeredCount)
+  const currentStage = calculateStage(answeredCount, TOTAL_QUESTIONS, MAX_STAGE) - 1
+  const remaining = calculateRemainingToNextStage(answeredCount, TOTAL_QUESTIONS, MAX_STAGE)
 
   const handleSignClick = () => {
     setIsModalOpen(true)
@@ -93,6 +75,9 @@ const Home = () => {
   }
   const handleLeafClick = () => {
     navigate('/Leaves')
+  }
+  const openTutorialModal = () => {
+    setShowTutorial(true)
   }
 
   //api 연동
@@ -153,7 +138,7 @@ const Home = () => {
         </GrassWrapper>
       </Background>
       <Container>
-        <Help>
+        <Help onClick={openTutorialModal}>
           <img src={help} alt="help" />
         </Help>
         <ProgressWrapper>
@@ -211,7 +196,6 @@ const Home = () => {
           </TodayQuestion>
         )}
       </Container>
-      {/* <InputTextModal message={'나무 이름을 변경해주세요'} /> */}
       {isModalOpen && (
         <InputTextModal
           title={'나무 이름을 입력하세요'}
@@ -222,6 +206,10 @@ const Home = () => {
           maxLength={maxLength}
         />
       )}
+      {answeredCount === 16 && (
+        <TreeAddedModal text={`${treeType}가 마음숲에 추가됐어요!`}></TreeAddedModal>
+      )}
+      <TutorialModal visible={showTutorial} onClose={() => setShowTutorial(false)} />
     </>
   )
 }
@@ -298,6 +286,7 @@ const Help = styled.div`
   position: absolute;
   right: 0;
   padding: 0.5rem;
+  z-index: 999;
   &:hover {
     cursor: pointer;
   }
@@ -308,6 +297,8 @@ const ProgressWrapper = styled.div`
   flex-direction: column;
   gap: 12px;
   padding-top: 50px;
+  z-index: 99;
+  position: relative;
 `
 const ProgressBarWrapper = styled.div`
   display: flex;

@@ -88,7 +88,6 @@ const Forest = () => {
           ))
         )}
       </ForestContainer>
-      <Padding />
     </>
   )
 }
@@ -149,9 +148,6 @@ const ForestContainer = styled.div`
   padding: 0 2rem;
   font-size: var(--fs15);
   font-weight: bold;
-`
-const Padding = styled.div`
-  height: 5rem;
 `
 const TreeContainer = styled(Link)`
   display: flex;
