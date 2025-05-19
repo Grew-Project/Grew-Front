@@ -10,8 +10,8 @@ import { useNavigate } from 'react-router-dom'
 import { InputTextModal } from '../components/modal/InputTextModal'
 import { getHomeInfo, updateTreeName } from '../api/home'
 import TutorialModal from '../components/modal/TutorialModal'
-import { MessageModal } from '../components/modal/MessageModal'
 import { TreeAddedModal } from '../components/modal/TreeAddedModal'
+import { calculateRemainingToNextStage, calculateStage } from '../utils/treeState'
 
 const Home = () => {
   const [isAnswered, setIsAnswered] = useState(false)
@@ -40,23 +40,11 @@ const Home = () => {
     })
     .map(([, value]) => value)
 
-  const TOTAL_QUESTIONS = 16 // 총 질문 수
-  const MAX_STAGE = 4 // 총 단계 수 (나무 1~4단계)
-  const QUESTIONS_PER_STAGE = TOTAL_QUESTIONS / MAX_STAGE // 단계별 질문 수 = 4
+  const TOTAL_QUESTIONS = 16
+  const MAX_STAGE = 4
 
-  const calculateStage = answeredCount => {
-    return Math.min(Math.floor(answeredCount / QUESTIONS_PER_STAGE) + 1, MAX_STAGE)
-  }
-  const calculateRemainingToNextStage = answeredCount => {
-    const currentStage = calculateStage(answeredCount)
-    const nextStageThreshold = currentStage * QUESTIONS_PER_STAGE
-
-    if (answeredCount >= TOTAL_QUESTIONS) return 0
-    return nextStageThreshold - answeredCount
-  }
-
-  const currentStage = calculateStage(answeredCount) - 1
-  const remaining = calculateRemainingToNextStage(answeredCount)
+  const currentStage = calculateStage(answeredCount, TOTAL_QUESTIONS, MAX_STAGE) - 1
+  const remaining = calculateRemainingToNextStage(answeredCount, TOTAL_QUESTIONS, MAX_STAGE)
 
   const handleSignClick = () => {
     setIsModalOpen(true)
