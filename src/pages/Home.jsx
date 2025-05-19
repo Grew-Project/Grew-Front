@@ -12,6 +12,7 @@ import { getHomeInfo, updateTreeName } from '../api/home'
 import TutorialModal from '../components/modal/TutorialModal'
 import { TreeAddedModal } from '../components/modal/TreeAddedModal'
 import { calculateRemainingToNextStage, calculateStage } from '../utils/treeState'
+import getSortedTreeImages from '../utils/getSortedTreeImages'
 
 const Home = () => {
   const [isAnswered, setIsAnswered] = useState(false)
@@ -26,19 +27,7 @@ const Home = () => {
   const [showTutorial, setShowTutorial] = useState(false)
   const navigate = useNavigate()
 
-  const treeImages = import.meta.glob(`../assets/trees/*.png`, {
-    eager: true,
-    import: 'default',
-  })
-  const sortedTreeImages = Object.entries(treeImages)
-    .filter(([path]) => path.includes(treeType))
-    .sort(([a], [b]) => {
-      const regex = new RegExp(`${treeType}(\\d+)`)
-      const numA = parseInt(a.match(regex)?.[1] || '0')
-      const numB = parseInt(b.match(regex)?.[1] || '0')
-      return numA - numB
-    })
-    .map(([, value]) => value)
+  const sortedTreeImages = getSortedTreeImages(treeType)
 
   const TOTAL_QUESTIONS = 16
   const MAX_STAGE = 4
