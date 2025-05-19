@@ -23,7 +23,7 @@ import styled from 'styled-components'
 
 const ModalOverlay = styled.div`
   z-index: 999;
-  display: ${({ visible }) => (visible ? 'flex' : 'none')};
+  display: ${({ $visible }) => ($visible ? 'flex' : 'none')};
   position: fixed;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -73,7 +73,7 @@ const CloseButton = styled.button`
 
 const TutorialSwiper = ({ visible, onClose }) => {
   return (
-    <ModalOverlay visible={visible}>
+    <ModalOverlay $visible={visible}>
       <Swiper
         slidesPerView={1}
         spaceBetween={0}
