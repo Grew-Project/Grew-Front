@@ -18,13 +18,10 @@ import getSortedTreeImages from '../utils/getSortedTreeImages'
 import { useQuery } from '@tanstack/react-query'
 
 const Home = () => {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['homeInfo'],
     queryFn: getHomeInfo,
     staleTime: 1000 * 60 * 5,
-    // staleTime: 0,
-    cacheTime: 0,
-    // refetchOnWindowFocus: false,
   })
 
   const [isAnswered, setIsAnswered] = useState(false)
@@ -35,7 +32,6 @@ const Home = () => {
   const [flowerCount, setFlowerCount] = useState(0)
   const [answeredCount, setAnsweredCount] = useState(0)
   const [treeType, setTreeType] = useState('사과나무')
-  // const [isLoading, setIsLoading] = useState(true)
   const [showTutorial, setShowTutorial] = useState(false)
   const navigate = useNavigate()
   const [weatherType, setWeatherType] = useState('Clear')
@@ -89,26 +85,6 @@ const Home = () => {
     setShowTutorial(true)
   }
 
-  //api 연동
-  // useEffect(() => {
-  //   const fetchHomeInfo = async () => {
-  //     try {
-  //       const res = await getHomeInfo()
-  //       setAnsweredCount(res.answerCount)
-  //       setLeafCount(res.leafCount)
-  //       setFlowerCount(res.flowerCount)
-  //       setTreeType(res.treeType)
-  //       setTreeName(res.treeName)
-  //       setTreeNameChange(res.treeName)
-  //       setIsAnswered(res.isAnswered)
-  //     } catch (err) {
-  //       console.error(err)
-  //     } finally {
-  //       setIsLoading(false)
-  //     }
-  //   }
-  //   fetchHomeInfo()
-  // }, [])
   useEffect(() => {
     if (data) {
       setAnsweredCount(data.answerCount)
@@ -118,7 +94,6 @@ const Home = () => {
       setTreeName(data.treeName)
       setTreeNameChange(data.treeName)
       setIsAnswered(data.isAnswered)
-      // setIsLoading(false)
     }
   }, [data])
 
