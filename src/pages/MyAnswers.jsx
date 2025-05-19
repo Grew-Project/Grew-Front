@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import { Header } from '../components/Header'
 import { Loading } from '../components/Loading'
+import Empty from '../components/Empty'
 
 export const MyAnswers = () => {
   const [postList, setPostList] = useState([])
@@ -54,6 +55,8 @@ export const MyAnswers = () => {
 
       {isLoading ? (
         <Loading />
+      ) : Object.entries(groupByYearMonth).length === 0 ? (
+        <Empty>아직 작성한 답변이 없어요</Empty>
       ) : (
         Object.entries(groupByYearMonth).map(([year, months]) => (
           <div key={year}>
@@ -67,7 +70,7 @@ export const MyAnswers = () => {
                     <Item key={post.answer_id} onClick={() => handleItemClick(post.answer_id)}>
                       <DateText>{new Date(post.created_at).getDate()}일</DateText>
                       <QuestionText>
-                        {post.question_content}
+                        <span>{post.question_content}</span>
                         {!post.is_public && <img src={lockIcon} alt="비공개" />}
                       </QuestionText>
                     </Item>
@@ -99,7 +102,6 @@ const List = styled.div`
 const Item = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
   padding: 0.85rem 0;
   margin-left: 0.5rem;
   position: relative;
@@ -117,6 +119,7 @@ const Item = styled.div`
 `
 
 const DateText = styled.div`
+  min-width: 40px;
   margin: 0 0.6rem;
 `
 
@@ -126,6 +129,13 @@ const QuestionText = styled.div`
   align-items: center;
   gap: 0.3rem;
   font-weight: bold;
+
+  span {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
   img {
     width: 12px;

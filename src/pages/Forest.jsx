@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 
-import goBack from '../assets/icons/goback-icon.svg'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Empty from '../components/Empty'
 
 import 사과나무 from '../assets/trees/사과나무4.png'
@@ -16,6 +15,7 @@ import SadnessFace from '../assets/faces/tree-sadness-face.png'
 import { useEffect, useState } from 'react'
 import { getForest } from '../api/forest'
 import { Spinner } from '../components/Spinner'
+import { Header } from '../components/Header'
 
 const Forest = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -54,21 +54,10 @@ const Forest = () => {
     Sadness: SadnessFace,
   }
 
-  const navigate = useNavigate()
-  const handlePrev = () => {
-    navigate('/mypage')
-  }
-
   return (
     <>
-      <HeaderContainer>
-        <Header>
-          <Back onClick={handlePrev}>
-            <img src={goBack} alt="back" />
-          </Back>
-          <HeaderTitle>마음숲</HeaderTitle>
-        </Header>
-      </HeaderContainer>
+      <Header center={<span>마음숲</span>} />
+
       <ForestContainer>
         {isLoading ? (
           <SpinnerWrapper>
@@ -99,44 +88,6 @@ const SpinnerWrapper = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-`
-const HeaderContainer = styled.div`
-  position: fixed;
-  top: 0;
-  padding: 52px 24px 1.2rem 24px;
-  background-color: var(--color-background);
-  width: 100%;
-  max-width: 480px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-left: 1px solid red;
-  border-right: 1px solid red;
-  z-index: 999;
-`
-const Header = styled.div`
-  display: flex;
-  justify-content: center;
-  position: relative;
-`
-const Back = styled.div`
-  position: absolute;
-  left: 0;
-  width: 32px;
-  height: 32px;
-  &:hover {
-    cursor: pointer;
-  }
-`
-const HeaderTitle = styled.div`
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 0.5rem;
-  font-size: var(--fs20);
-  font-weight: bold;
-  word-break: keep-all;
 `
 
 const ForestContainer = styled.div`

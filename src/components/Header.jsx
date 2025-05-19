@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import goBackIcon from '@/assets/icons/goback-icon.svg'
+import goBackIcon from '@/assets/icons/left-arrow-icon.svg'
 import { useNavigate } from 'react-router-dom'
 
 export const Header = ({ left, center, right, onBackClick }) => {
@@ -8,7 +8,7 @@ export const Header = ({ left, center, right, onBackClick }) => {
     <HeaderWrapper>
       <LeftContent>
         <button onClick={onBackClick || (() => navigate(-1))}>
-          <img src={goBackIcon} alt="뒤로가기" />
+          <img src={goBackIcon} alt="뒤로가기" className="back" />
         </button>
         {left}
       </LeftContent>
@@ -25,6 +25,10 @@ const HeaderWrapper = styled.header`
   margin-bottom: 2rem;
 
   img {
+    height: 20px;
+  }
+
+  .back {
     height: 20px;
   }
 
@@ -59,6 +63,10 @@ const CenterContent = styled.div`
   transform: translateX(-50%);
   font-size: var(--fs20);
   font-weight: bold;
+
+  .leaf {
+    margin: 0 0.5rem;
+  }
 `
 
 const RightContent = styled.div`

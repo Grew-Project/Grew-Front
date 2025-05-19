@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { getLeaves } from '../api/leaf'
 
-import goBack from '../assets/icons/goback-icon.svg'
+// import goBack from '../assets/icons/goback-icon.svg'
 import LeafIcon from '../assets/icons/leaf-icon.svg'
 import refreshIcon from '../assets/icons/refresh-icon.svg'
 import Empty from '../components/Empty'
 import { Spinner } from '../components/Spinner'
+import { Header } from '../components/Header'
 
 const Leaves = () => {
   const [leaves, setLeaves] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
-  const navigate = useNavigate()
-  const handlePrev = () => {
-    navigate('/home')
-  }
+  // const navigate = useNavigate()
+  // const handlePrev = () => {
+  //   navigate('/home')
+  // }
   const handleRefresh = () => {
     fetchLeaves()
   }
@@ -42,25 +43,20 @@ const Leaves = () => {
   }, [])
   return (
     <>
-      <HeaderContainer>
-        <Header>
-          <Back onClick={handlePrev}>
-            <img src={goBack} alt="back" />
-          </Back>
-          <HeaderTitle>
-            <LeafIconWrapper>
-              <img src={LeafIcon} alt="LeafIcon" />
-            </LeafIconWrapper>
+      <Header
+        center={
+          <>
+            <img src={LeafIcon} alt="LeafIcon" className="leaf" />
             잎사귀함
-            <LeafIconWrapper>
-              <img src={LeafIcon} alt="LeafIcon" />
-            </LeafIconWrapper>
-          </HeaderTitle>
-          <Refresh onClick={handleRefresh}>
-            <img src={refreshIcon} alt="refreshIcon" />
-          </Refresh>
-        </Header>
-      </HeaderContainer>
+            <img src={LeafIcon} alt="LeafIcon" className="leaf" />
+          </>
+        }
+        right={
+          <button onClick={handleRefresh}>
+            <img src={refreshIcon} alt="새로고침" />
+          </button>
+        }
+      />
       <LeafContent>
         {isLoading ? (
           <SpinnerWrapper>
@@ -90,62 +86,10 @@ const SpinnerWrapper = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
 `
-const HeaderContainer = styled.div`
-  position: fixed;
-  top: 0;
-  padding: 52px 24px 1.2rem 24px;
-  background-color: var(--color-background);
-  width: 100%;
-  max-width: 480px;
-  left: 50%;
-  transform: translateX(-50%);
-`
-const Header = styled.div`
-  display: flex;
-  justify-content: center;
-  position: relative;
-`
-const Back = styled.div`
-  position: absolute;
-  left: 0;
-  width: 32px;
-  height: 32px;
-  &:hover {
-    cursor: pointer;
-  }
-`
-const HeaderTitle = styled.div`
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 0.5rem;
-  font-size: var(--fs20);
-  font-weight: bold;
-  word-break: keep-all;
-`
-const LeafIconWrapper = styled.div`
-  img {
-    width: 19px;
-  }
-`
-const Refresh = styled.div`
-  position: absolute;
-  right: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  &:hover {
-    cursor: pointer;
-  }
-`
 
 const LeafContent = styled.div`
-  height: calc(100% - 32px - 1.2rem);
-  margin-top: 52px;
+  // height: calc(100% - 32px - 1.2rem);
+  // margin-top: 52px;
 `
 const Padding = styled.div`
   height: 5rem;

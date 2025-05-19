@@ -201,7 +201,7 @@ export const AnswerDetail = () => {
           <Header
             left={
               <span>
-                #{post.question_id} <strong>번째 질문</strong>{' '}
+                #{post.answer_id} <strong>번째 답변</strong>{' '}
                 <span className="date">{formattedDate(post.created_at)}</span>
                 {!post.is_public && <img src={lockIcon} alt="비공개" className="lock-icon" />}
               </span>

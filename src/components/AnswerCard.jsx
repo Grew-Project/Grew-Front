@@ -19,6 +19,10 @@ const QuestionBlock = styled.div`
 const QuestionText = styled.div`
   color: var(--color-primary);
   margin-right: 0.3rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
 `
 
 const AnswerPreview = styled.p`

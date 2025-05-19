@@ -212,10 +212,6 @@ const Home = () => {
 export default Home
 
 const getGradient = weather => {
-  // if (weather === 'Clouds' || weather === 'Rain') {
-  //   return 'linear-gradient(145deg, #eceff1 10%, #cfd8dc 23%, #b0bec5 99%)'
-  // }
-  //
   if (weather === 'Clouds') {
     return 'linear-gradient(145deg, #eceff1 10%, #cfd8dc 23%, #b0bec5 99%);'
   } else if (weather === 'Rain') {
@@ -226,16 +222,6 @@ const getGradient = weather => {
     return 'linear-gradient(145deg, #d1f3ff 10%, #ffffff 23%, #a9e8ff 99%)'
   }
 }
-
-// const Background = styled.div`
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   width: 100%;
-//   height: 100%;
-//   background: linear-gradient(145deg, #d1f3ff 10%, #ffffff 23%, #a9e8ff 99%);
-//   overflow: hidden;
-// `
 
 const Background = styled.div`
   position: absolute;
@@ -265,12 +251,6 @@ const Ground = styled.div`
   height: 200px;
   background-color: #96c93c;
 `
-// const Cloud = styled.img`
-//   position: absolute;
-//   width: 100%;
-//   height: 215px;
-//   object-fit: cover;
-// `
 
 const Container = styled.div`
   width: 100%;
