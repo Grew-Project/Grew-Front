@@ -162,7 +162,7 @@ export const AnswerDetail = () => {
 
   const viewAnswer = () => {
     return (
-      <>
+      <ViewContainer>
         <EmotionDisplayGroup>
           {emotions.map(emotion => (
             <EmotionDisplayItem key={emotion} selected={formData.emotionType === emotion}>
@@ -179,7 +179,7 @@ export const AnswerDetail = () => {
             수정하기 <img src={penIcon} alt="수정" />
           </button>
         </UpdateBtn>
-      </>
+      </ViewContainer>
     )
   }
 
@@ -214,6 +214,18 @@ export const AnswerDetail = () => {
   )
 }
 
+const ViewContainer = styled.div`
+  height: calc(100% - 55px);
+  display: flex;
+  flex-direction: column;
+`
+
+const ContentWrapper = styled.div`
+  width: 100%;
+  flex: 1;
+  overflow-y: auto;
+`
+
 const ContentArea = styled.div`
   border: 1px solid var(--color-secondary);
   border-radius: var(--radius-base);
@@ -222,15 +234,8 @@ const ContentArea = styled.div`
   height: 100%;
   font-size: ${props => props.fontSize || 'var(--fs15)'};
   transition: 0.2s;
-  margin-top: 1rem;
   white-space: pre-wrap;
   word-break: break-word;
-`
-
-const ContentWrapper = styled.div`
-  width: 100%;
-  flex: 1;
-  height: 80%;
 `
 
 const UpdateBtn = styled.div`

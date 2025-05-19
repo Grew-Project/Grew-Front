@@ -55,7 +55,7 @@ export const Emotion = styled.button`
 `
 
 export const StyledAnswerForm = styled.form`
-  height: calc(100% - 32px);
+  height: calc(100% - 55px);
   display: flex;
   flex-direction: column;
 `
@@ -65,11 +65,12 @@ export const AnswerTitle = styled.div`
   padding-bottom: 1rem;
   word-break: keep-all;
   display: flex;
+  text-align: center;
+  align-self: center;
+  max-width: 400px;
   justify-content: center;
   white-space: pre-wrap;
-  word-break: break-word;
   overflow-wrap: break-word;
-  text-align: center;
 `
 export const LengthCheck = styled.div`
   color: var(--font-color-gray);
