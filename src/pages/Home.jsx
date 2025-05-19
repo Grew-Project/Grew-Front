@@ -111,7 +111,7 @@ const Home = () => {
     const fetchWeather = async () => {
       try {
         const response = await getCurrentWeather()
-        setWeatherType(normalizeWeather(response.data.weather[0].main))
+        setWeatherType(normalizeWeather(response.weather[0].main))
       } catch (error) {
         console.error(error)
       }

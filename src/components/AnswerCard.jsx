@@ -19,10 +19,19 @@ const QuestionBlock = styled.div`
 const QuestionText = styled.div`
   color: var(--color-primary);
   margin-right: 0.3rem;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 300px;
+  ${({ expanded }) =>
+    expanded
+      ? `
+    white-space: normal;
+    word-break: keep-all;
+  `
+      : `
+    white-space: nowrap;
+    word-break: normal;
+  `};
 `
 
 const AnswerPreview = styled.p`
@@ -49,7 +58,7 @@ export const AnswerCard = ({
     <Card onClick={onCardClick}>
       <CardHeader>
         <QuestionBlock>
-          <QuestionText>{post.question_content}</QuestionText>
+          <QuestionText expanded={isExpanded}>{post.question_content}</QuestionText>
           {emotionIcon && <img src={emotionIcon} alt={post.emotion_type} />}
         </QuestionBlock>
 

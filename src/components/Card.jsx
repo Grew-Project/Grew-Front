@@ -6,4 +6,5 @@ export const Card = styled.div`
   background-color: var(--color-white);
   padding: 1rem;
   margin-bottom: 0.8rem;
+  pointer: cursor;
 `
