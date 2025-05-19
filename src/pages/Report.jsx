@@ -177,11 +177,8 @@ const HeaderTitle = styled.div`
 `
 
 const ReportContainer = styled.div`
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
   width: 100%;
+  margin-top: 52px;
 `
 
 const TreeContainer = styled.div`
