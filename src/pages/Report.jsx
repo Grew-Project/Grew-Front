@@ -20,6 +20,7 @@ import SadnessFace from '../assets/faces/sadness-face.svg'
 import { getForest } from '../api/forest'
 import { Spinner } from '../components/Spinner'
 import EmotionPieChart from '../components/EmotionPieChart'
+import { Header } from '../components/Header'
 
 const Report = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -64,14 +65,7 @@ const Report = () => {
 
   return (
     <>
-      <HeaderContainer>
-        <Header>
-          <Back onClick={handlePrev}>
-            <img src={goBack} alt="back" />
-          </Back>
-          <HeaderTitle>마음숲</HeaderTitle>
-        </Header>
-      </HeaderContainer>
+      <Header center={<span>마음숲</span>} />
       <ReportContainer>
         {isLoading ? (
           <SpinnerWrapper>
@@ -150,11 +144,6 @@ const HeaderContainer = styled.div`
   border-right: 1px solid red;
   z-index: 999;
 `
-const Header = styled.div`
-  display: flex;
-  justify-content: center;
-  position: relative;
-`
 const Back = styled.div`
   position: absolute;
   left: 0;
@@ -178,7 +167,6 @@ const HeaderTitle = styled.div`
 
 const ReportContainer = styled.div`
   width: 100%;
-  margin-top: 52px;
 `
 
 const TreeContainer = styled.div`

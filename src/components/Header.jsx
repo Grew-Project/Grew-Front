@@ -28,6 +28,7 @@ const HeaderWrapper = styled.header`
   width: calc(100% - 48px);
   max-width: calc(480px - 48px);
   background-color: var(--color-background);
+  z-index: 99;
   img {
     height: 20px;
   }
