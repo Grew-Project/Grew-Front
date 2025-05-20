@@ -73,7 +73,7 @@ const Community = () => {
   const uniqueNicknames = useMemo(() => {
     return [...new Set(postList.map(post => post.nickname))]
   }, [postList])
-
+  
   const fetchFlowerStatus = async () => {
     setIsLoadingFlowerStatus(true)
     try {
@@ -101,7 +101,7 @@ const Community = () => {
 
   useEffect(() => {
     if (postList.length > 0) fetchFlowerStatus()
-  }, [postList])
+  }, [uniqueNicknames, nickname, postList])
 
   const filteredPosts = postList.filter(post => {
     const emotion = post.emotion_type.toLowerCase()
