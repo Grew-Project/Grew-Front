@@ -8,6 +8,7 @@ import goback from '../assets/icons/goback-icon.svg'
 import { Spinner } from '../components/Spinner'
 import { login } from '../api/auth'
 import useAuthStore from '../store/useAuthStore'
+import { useQueryClient } from '@tanstack/react-query'
 
 const Login = () => {
   const [id, setId] = useState('')
@@ -16,6 +17,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const { login: setLoginState } = useAuthStore()
+  const queryClient = useQueryClient()
 
   const handleIdChange = e => {
     setId(e.target.value)
@@ -46,6 +48,7 @@ const Login = () => {
       const userData = { user_id: id, password }
       const response = await login(userData)
       if (response.status === 200) {
+        queryClient.invalidateQueries(['homeInfo'])
         navigate('/home')
         setLoginState(response.data.token, id, response.data.nickname)
       }
