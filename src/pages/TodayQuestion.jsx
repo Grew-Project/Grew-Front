@@ -208,6 +208,8 @@ const TodayQuestion = () => {
 export default TodayQuestion
 
 const Back = styled.div`
+  position: absolute;
+  top: 52px;
   width: 32px;
   height: 32px;
   &:hover {
@@ -280,11 +282,12 @@ const StyledAnswerForm = styled.form`
   height: calc(100% - 32px);
   display: flex;
   flex-direction: column;
+  overflow: auto;
 `
 const AnswerTitle = styled.div`
   font-size: var(--fs20);
   font-weight: bold;
-  padding: 2rem 0 1rem 0;
+  padding: 0 0 1rem 0;
   word-break: keep-all;
 `
 const LengthCheck = styled.div`

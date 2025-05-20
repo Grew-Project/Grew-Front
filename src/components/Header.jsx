@@ -22,8 +22,12 @@ const HeaderWrapper = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2rem;
-
+  position: fixed;
+  top: 0;
+  padding: 52px 0 2rem 0;
+  width: calc(100% - 48px);
+  max-width: calc(480px - 48px);
+  background-color: var(--color-background);
   img {
     height: 20px;
   }

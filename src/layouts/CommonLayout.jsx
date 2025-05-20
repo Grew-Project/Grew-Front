@@ -27,8 +27,7 @@ const Wrapper = styled.div`
   height: 100vh;
   box-sizing: border-box;
   position: relative;
-  /* padding: 104px 24px 80px 24px; */
-  padding: 52px 24px 80px 24px;
+  padding: 104px 24px 80px 24px;
   background-color: var(--color-background);
 
   overflow-y: scroll;

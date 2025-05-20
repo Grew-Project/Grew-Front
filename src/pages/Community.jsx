@@ -151,6 +151,7 @@ const Community = () => {
           </TabButton>
         ))}
       </TabMenu>
+      <Padding />
       {isLoading ? (
         <Loading />
       ) : filteredPosts.length === 0 ? (
@@ -222,12 +223,19 @@ export default Community
 
 const TabMenu = styled.div`
   display: flex;
-  width: 100%;
   justify-content: space-evenly;
   align-items: center;
-  margin-bottom: 1.2rem;
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.6rem;
+  width: calc(100% - 48px);
+  max-width: calc(480px - 48px);
+  position: fixed;
+  top: 104px;
+  background-color: var(--color-background);
 `
-
+const Padding = styled.div`
+  height: calc(40px + 1.2rem);
+`
 const TabButton = styled.button`
   width: 70px;
   height: 40px;
