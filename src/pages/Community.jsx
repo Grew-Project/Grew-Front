@@ -54,54 +54,9 @@ const Community = () => {
 
   const nickname = useAuthStore(state => state.nickname)
 
-  const fetchPostList = async () => {
-    try {
-      setIsLoadingPostList(true)
-      const data = await getPostList()
-      setPostList(data)
-    } catch (error) {
-      console.error(error.message)
-    } finally {
-      setIsLoadingPostList(false)
-    }
-  }
-
   useEffect(() => {
-    fetchPostList()
+    handleRefresh()
   }, [])
-
-  const uniqueNicknames = useMemo(() => {
-    return [...new Set(postList.map(post => post.nickname))]
-  }, [postList])
-  
-  const fetchFlowerStatus = async () => {
-    setIsLoadingFlowerStatus(true)
-    try {
-      const results = await Promise.all(
-        uniqueNicknames.map(receiverNickname =>
-          checkFlower(receiverNickname, nickname).then(data => ({
-            receiverNickname,
-            data,
-          }))
-        )
-      )
-
-      const statusMap = results.reduce((acc, { receiverNickname, data }) => {
-        acc[receiverNickname] = data
-        return acc
-      }, {})
-
-      setFlowerSentMap(statusMap)
-    } catch (error) {
-      console.error('꽃 상태 조회 실패:', error)
-    } finally {
-      setIsLoadingFlowerStatus(false)
-    }
-  }
-
-  useEffect(() => {
-    if (postList.length > 0) fetchFlowerStatus()
-  }, [uniqueNicknames, nickname, postList])
 
   const filteredPosts = postList.filter(post => {
     const emotion = post.emotion_type.toLowerCase()
@@ -147,8 +102,36 @@ const Community = () => {
   }
 
   const handleRefresh = async () => {
-    await fetchPostList()
-    await fetchFlowerStatus()
+    setIsLoadingPostList(true)
+    setIsLoadingFlowerStatus(true)
+
+    try {
+      const postData = await getPostList()
+      setPostList(postData)
+
+      const uniqueNicknames = [...new Set(postData.map(post => post.nickname))]
+
+      const results = await Promise.all(
+        uniqueNicknames.map(receiverNickname =>
+          checkFlower(receiverNickname, nickname).then(data => ({
+            receiverNickname,
+            data,
+          }))
+        )
+      )
+
+      const statusMap = results.reduce((acc, { receiverNickname, data }) => {
+        acc[receiverNickname] = data
+        return acc
+      }, {})
+
+      setFlowerSentMap(statusMap)
+    } catch (error) {
+      console.error('새로고침 중 오류:', error)
+    } finally {
+      setIsLoadingPostList(false)
+      setIsLoadingFlowerStatus(false)
+    }
   }
 
   const isLoading = isLoadingPostList || isLoadingFlowerStatus

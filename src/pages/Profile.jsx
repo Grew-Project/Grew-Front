@@ -14,6 +14,7 @@ import { AnswerCard } from '../components/AnswerCard'
 import TitleListItem from '../components/TitleListItem'
 import { Header } from '../components/Header'
 import { Loading } from '../components/Loading'
+import { Alarm } from '../components/Alarm'
 
 const Profile = () => {
   const nickname = useAuthStore(state => state.nickname)
@@ -26,6 +27,7 @@ const Profile = () => {
   const [postList, setPostList] = useState([])
   const [expandedPost, setExpandedPost] = useState(null)
   const [flowerSent, setFlowerSent] = useState(false)
+  const [isSentLeaf, setIsSentLeaf] = useState(false)
 
   const fetchUserAnswers = async () => {
     try {
@@ -33,9 +35,7 @@ const Profile = () => {
       const data = await getUserAnswers(profileNickname)
       setPostList(data)
       console.log(data)
-      setTimeout(() => {
-        setIsLoading(false)
-      }, 100)
+      setIsLoading(false)
     } catch (error) {
       console.log(error.message) // 수정 예정
     }
@@ -64,6 +64,16 @@ const Profile = () => {
   }
 
   const handleSendLeaf = () => {
+    sendLeaf(nickname, profileNickname, leafMessage).then(() => {
+      setIsSentLeaf(true)
+      setTimeout(() => {
+        setIsSentLeaf(false)
+      }, 3000)
+    })
+    setModalType(null)
+  }
+
+  const handlClickLeafBtn = () => {
     setModalType('leaf')
     setLeafMessage('')
   }
@@ -78,13 +88,9 @@ const Profile = () => {
           icon={flowerIcon}
           text="응원꽃 보내기"
           disabled={flowerSent}
-          onClick={() => handleSendFlower(profileNickname)}
+          onClick={() => handleSendFlower()}
         />
-        <ActionButton
-          icon={leafIcon}
-          text="잎사귀 보내기"
-          onClick={() => handleSendLeaf(profileNickname)}
-        />
+        <ActionButton icon={leafIcon} text="잎사귀 보내기" onClick={() => handlClickLeafBtn()} />
       </Buttons>
       {isLoading ? (
         <Loading />
@@ -136,12 +142,12 @@ const Profile = () => {
           values={{ message: leafMessage }}
           onChange={(name, value) => setLeafMessage(value)}
           onConfirm={() => {
-            sendLeaf(profileNickname, nickname, leafMessage)
-            setModalType(null)
+            handleSendLeaf(leafMessage)
           }}
           onCancel={() => setModalType(null)}
         />
       )}
+      {isSentLeaf && <Alarm text={`${profileNickname} 님에게 잎사귀를 보냈어요!`} />}
     </>
   )
 }

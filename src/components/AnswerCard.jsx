@@ -35,16 +35,16 @@ const QuestionText = styled.div`
 `
 
 const AnswerPreview = styled.p`
-  font-size: 0.9rem;
-  line-height: 1.4;
+  line-height: 1.5;
   margin: 0 0 1rem;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: pre-wrap;
-  word-break: break-word;
-
+  cursor: pointer;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  white-space: normal;
   ${({ expanded }) => (expanded ? '' : '-webkit-line-clamp: 2;')}
 `
 
