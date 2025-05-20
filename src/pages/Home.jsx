@@ -259,6 +259,7 @@ const Container = styled.div`
 `
 const Help = styled.div`
   position: absolute;
+  top: -52px;
   right: 0;
   padding: 0.5rem;
   z-index: 999;
@@ -271,7 +272,6 @@ const ProgressWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding-top: 50px;
   z-index: 99;
   position: relative;
 `
@@ -328,7 +328,7 @@ const Notification = styled.div`
   flex-direction: column;
   gap: 1rem;
   position: absolute;
-  top: 137px;
+  top: 85px;
 `
 const NotificationIcon = styled.div`
   position: relative;
