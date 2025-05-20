@@ -33,9 +33,7 @@ const Profile = () => {
       const data = await getUserAnswers(profileNickname)
       setPostList(data)
       console.log(data)
-      setTimeout(() => {
-        setIsLoading(false)
-      }, 100)
+      setIsLoading(false)
     } catch (error) {
       console.log(error.message) // 수정 예정
     }
