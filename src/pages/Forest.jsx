@@ -30,7 +30,6 @@ const Forest = () => {
         if (res.status === 200) {
           setTreeData(res.data.groups)
           setTotal(res.data.total)
-          console.log(res.data.groups)
         }
       } catch (err) {
         console.error(err)

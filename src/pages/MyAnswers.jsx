@@ -19,7 +19,6 @@ const MyAnswers = () => {
       setIsLoading(true)
       const data = await getMyAnswerDetail(nickname)
       setPostList(data)
-      // console.log(data)
       setIsLoading(false)
     } catch (error) {
       console.log(error)
@@ -36,7 +35,6 @@ const MyAnswers = () => {
       if (!acc[year][month]) acc[year][month] = []
 
       acc[year][month].push(post)
-      console.log(acc)
       return acc
     }, {})
   }, [postList])

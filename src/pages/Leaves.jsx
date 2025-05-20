@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
-// import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { getLeaves } from '../api/leaf'
 
-// import goBack from '../assets/icons/goback-icon.svg'
 import LeafIcon from '../assets/icons/leaf-icon.svg'
 import refreshIcon from '../assets/icons/refresh-icon.svg'
 import Empty from '../components/Empty'
@@ -14,10 +12,6 @@ const Leaves = () => {
   const [leaves, setLeaves] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
-  // const navigate = useNavigate()
-  // const handlePrev = () => {
-  //   navigate('/home')
-  // }
   const handleRefresh = () => {
     fetchLeaves()
   }

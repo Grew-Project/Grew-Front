@@ -37,7 +37,6 @@ export const getFlowerCount = async () => {
         user_id: userId,
       },
     })
-    console.log(response.data.flower_count)
 
     return response.data.flower_count
   } catch (error) {
@@ -52,7 +51,6 @@ export const getLeafCount = async () => {
         user_id: userId,
       },
     })
-    console.log(response.data.leaf_count)
     return response.data.leaf_count
   } catch (error) {
     console.error(error)

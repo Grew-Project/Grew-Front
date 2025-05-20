@@ -31,10 +31,8 @@ export const sendLeaf = async (senderNickname, receiverNickname, content) => {
       leaf_content: content,
     })
 
-    console.log(response)
     return response.data
   } catch (error) {
-    // throw new Error(error.message)
     console.log(error.message)
   }
 }
@@ -42,7 +40,6 @@ export const sendLeaf = async (senderNickname, receiverNickname, content) => {
 export const getUserAnswers = async nickname => {
   try {
     const body = { nickname: nickname }
-    console.log(body)
     const response = await axios.get(`${BASE_URL}/api/mypage/my-answer-search?nickname=${nickname}`)
     return response.data.filter(post => {
       return post.is_public
