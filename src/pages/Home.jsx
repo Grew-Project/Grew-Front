@@ -22,6 +22,7 @@ import { TreeAddedModal } from '../components/modal/TreeAddedModal'
 import { calculateRemainingToNextStage, calculateStage } from '../utils/treeState'
 import getSortedTreeImages from '../utils/getSortedTreeImages'
 import { useQuery } from '@tanstack/react-query'
+import forestImg from '../assets/trees/숲.png'
 
 const Home = () => {
   const { data, isLoading } = useQuery({
@@ -159,10 +160,21 @@ const Home = () => {
         </Help>
         <ProgressWrapper>
           <ProgressBarWrapper>
-            <Level>{!isLoading && <img src={sortedTreeImages[currentStage]} alt="" />}</Level>
+            <Level>
+              {!isLoading && (
+                <img src={sortedTreeImages[currentStage]} alt={sortedTreeImages[currentStage]} />
+              )}
+            </Level>
             <ProgressBar $remaining={remaining}></ProgressBar>
             <Level>
-              {answeredCount < 12 && <img src={sortedTreeImages[currentStage + 1]} alt="" />}
+              {answeredCount < 12 ? (
+                <img
+                  src={sortedTreeImages[currentStage + 1]}
+                  alt={sortedTreeImages[currentStage + 1]}
+                />
+              ) : (
+                answeredCount >= 12 && <ForestImg src={forestImg} alt="나무 완성" />
+              )}
             </Level>
           </ProgressBarWrapper>
           {!isLoading && (
@@ -186,7 +198,7 @@ const Home = () => {
           </NotificationIcon>
         </Notification>
         {!isLoading && (
-          <Tree onClick={isAnswered ? handleTreeClick : handleTreeClick} $isAnswered={isAnswered}>
+          <Tree onClick={isAnswered ? undefined : handleTreeClick} $isAnswered={isAnswered}>
             <img src={sortedTreeImages[currentStage]} alt="나무 이미지" />
           </Tree>
         )}
@@ -317,6 +329,9 @@ const Level = styled.div`
     width: 60%;
   }
 `
+const ForestImg = styled.img`
+  width: 100% !important;
+`
 const ProgressBar = styled.div`
   width: 60%;
   height: 18px;
@@ -350,6 +365,7 @@ const Notification = styled.div`
   gap: 1rem;
   position: absolute;
   top: 85px;
+  z-index: 99;
 `
 const NotificationIcon = styled.div`
   position: relative;
