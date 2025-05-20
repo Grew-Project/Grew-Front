@@ -46,7 +46,7 @@ const Community = () => {
   const [expandedPost, setExpandedPost] = useState(null)
   const [targetNickname, setTargetNickname] = useState('')
   const [leafMessage, setLeafMessage] = useState('')
-  const [flowerSentMap, setFlowerSentMap] = useState({}) // nickname → true/false
+  const [flowerSentMap, setFlowerSentMap] = useState({})
   const [isSentLeaf, setIsSentLeaf] = useState(false)
   const [isLoadingPostList, setIsLoadingPostList] = useState(true)
   const [isLoadingFlowerStatus, setIsLoadingFlowerStatus] = useState(true)
@@ -60,7 +60,7 @@ const Community = () => {
       const data = await getPostList()
       setPostList(data)
     } catch (error) {
-      console.log(error.message) // 수정 예정
+      console.error(error.message)
     } finally {
       setIsLoadingPostList(false)
     }
@@ -73,37 +73,34 @@ const Community = () => {
   const uniqueNicknames = useMemo(() => {
     return [...new Set(postList.map(post => post.nickname))]
   }, [postList])
+  
+  const fetchFlowerStatus = async () => {
+    setIsLoadingFlowerStatus(true)
+    try {
+      const results = await Promise.all(
+        uniqueNicknames.map(receiverNickname =>
+          checkFlower(receiverNickname, nickname).then(data => ({
+            receiverNickname,
+            data,
+          }))
+        )
+      )
+
+      const statusMap = results.reduce((acc, { receiverNickname, data }) => {
+        acc[receiverNickname] = data
+        return acc
+      }, {})
+
+      setFlowerSentMap(statusMap)
+    } catch (error) {
+      console.error('꽃 상태 조회 실패:', error)
+    } finally {
+      setIsLoadingFlowerStatus(false)
+    }
+  }
 
   useEffect(() => {
-    console.time('fetchFlowerStatus')
-
-    const fetchFlowerStatus = async () => {
-      setIsLoadingFlowerStatus(true)
-      try {
-        const results = await Promise.all(
-          uniqueNicknames.map(receiverNickname =>
-            checkFlower(receiverNickname, nickname).then(data => ({
-              receiverNickname,
-              data,
-            }))
-          )
-        )
-
-        const statusMap = results.reduce((acc, { receiverNickname, data }) => {
-          acc[receiverNickname] = data
-          return acc
-        }, {})
-
-        setFlowerSentMap(statusMap)
-      } catch (error) {
-        console.error('꽃 상태 조회 실패:', error)
-      } finally {
-        setIsLoadingFlowerStatus(false)
-      }
-    }
-
     if (postList.length > 0) fetchFlowerStatus()
-    console.timeEnd('fetchFlowerStatus')
   }, [uniqueNicknames, nickname, postList])
 
   const filteredPosts = postList.filter(post => {
@@ -149,6 +146,11 @@ const Community = () => {
     setModalType(null)
   }
 
+  const handleRefresh = async () => {
+    await fetchPostList()
+    await fetchFlowerStatus()
+  }
+
   const isLoading = isLoadingPostList || isLoadingFlowerStatus
 
   return (
@@ -156,7 +158,7 @@ const Community = () => {
       <Header
         center={<span>커뮤니티</span>}
         right={
-          <button onClick={fetchPostList}>
+          <button onClick={handleRefresh}>
             <img src={refreshIcon} alt="새로고침" />
           </button>
         }
@@ -173,7 +175,6 @@ const Community = () => {
           </TabButton>
         ))}
       </TabMenu>
-      <Padding />
       {isLoading ? (
         <Loading />
       ) : filteredPosts.length === 0 ? (
@@ -245,19 +246,12 @@ export default Community
 
 const TabMenu = styled.div`
   display: flex;
+  width: 100%;
   justify-content: space-evenly;
   align-items: center;
-  margin-bottom: 0.6rem;
-  padding-bottom: 0.6rem;
-  width: calc(100% - 48px);
-  max-width: calc(480px - 48px);
-  position: fixed;
-  top: 104px;
-  background-color: var(--color-background);
+  margin-bottom: 1.2rem;
 `
-const Padding = styled.div`
-  height: calc(40px + 1.2rem);
-`
+
 const TabButton = styled.button`
   width: 70px;
   height: 40px;
