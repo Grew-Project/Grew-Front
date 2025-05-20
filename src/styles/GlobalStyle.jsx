@@ -13,7 +13,7 @@ const GlobalStyle = createGlobalStyle`
         --color-background: #fafff5;
         --color-footer: #363636;
         --color-black: #000000;
-        --color-white: #fffafa;
+        --color-white: #ffffff;
         --color-gray: #d9d9d9;
         --font-color-black: #212121;
         --font-color-gray: #555454;
@@ -26,7 +26,8 @@ const GlobalStyle = createGlobalStyle`
     }
 
     body {
-        background-color: var(--color-background);
+        background-color: #fff5f5;
+        /* background-color: var(--color-background) */
     }
 
     button {

@@ -26,14 +26,4 @@ const Wrapper = styled.div`
   box-sizing: border-box;
   position: relative;
   padding: 52px 24px 80px 24px;
-  border: 1px solid red;
-`
-const Nav = styled.div`
-  border: 1px solid blue;
-  position: absolute;
-  bottom: 0;
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 480px;
-  height: 56px;
 `
