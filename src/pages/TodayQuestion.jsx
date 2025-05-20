@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { createTodayAnswer, getQuestionCount, getTodayQuestion } from '../api/today_question'
 import { Button } from '../components/Button'
-import { Textarea } from '../components/TextArea'
+import { Textarea } from '../components/Textarea.jsx'
 
 import angerFace from '../assets/faces/anger-face.svg'
 import confusionFace from '../assets/faces/confusion-face.svg'

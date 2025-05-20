@@ -16,7 +16,7 @@ import {
 } from '../components/Question'
 import { Spinner } from '../components/Spinner'
 import { Button } from '../components/Button'
-import { Textarea } from '../components/TextArea'
+import { Textarea } from '../components/Textarea.jsx'
 import angerFace from '../assets/faces/anger-face.svg'
 import confusionFace from '../assets/faces/confusion-face.svg'
 import happinessFace from '../assets/faces/happiness-face.svg'
