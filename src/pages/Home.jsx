@@ -10,7 +10,13 @@ import snow from '../assets/weather/snow.gif'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { InputTextModal } from '../components/modal/InputTextModal'
-import { getCurrentWeather, getHomeInfo, updateTreeName } from '../api/home'
+import {
+  getCurrentWeather,
+  getFlowerCount,
+  getHomeInfo,
+  getLeafCount,
+  updateTreeName,
+} from '../api/home'
 import TutorialModal from '../components/modal/TutorialModal'
 import { TreeAddedModal } from '../components/modal/TreeAddedModal'
 import { calculateRemainingToNextStage, calculateStage } from '../utils/treeState'
@@ -88,14 +94,25 @@ const Home = () => {
   useEffect(() => {
     if (data) {
       setAnsweredCount(data.answerCount)
-      setLeafCount(data.leafCount)
-      setFlowerCount(data.flowerCount)
       setTreeType(data.treeType)
       setTreeName(data.treeName)
       setTreeNameChange(data.treeName)
       setIsAnswered(data.isAnswered)
     }
   }, [data])
+  useEffect(() => {
+    const fetchCount = async () => {
+      try {
+        const [getLeafRes, getFlowerRes] = await Promise.all([getLeafCount(), getFlowerCount()])
+        setLeafCount(getLeafRes)
+        setFlowerCount(getFlowerRes)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    fetchCount()
+  }, [])
 
   function normalizeWeather(weather) {
     if (['Rain', 'Thunderstorm', 'Drizzle'].includes(weather)) {

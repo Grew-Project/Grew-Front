@@ -29,7 +29,7 @@ const getTreeInfo = async () => {
     console.error(error)
   }
 }
-const getFlowerCount = async () => {
+export const getFlowerCount = async () => {
   const userId = useAuthStore.getState().userId
   try {
     const response = await axios.get(`${BASE_URL}/api/main/flower-count`, {
@@ -37,12 +37,14 @@ const getFlowerCount = async () => {
         user_id: userId,
       },
     })
+    console.log(response.data.flower_count)
+
     return response.data.flower_count
   } catch (error) {
     console.error(error)
   }
 }
-const getLeafCount = async () => {
+export const getLeafCount = async () => {
   const userId = useAuthStore.getState().userId
   try {
     const response = await axios.get(`${BASE_URL}/api/main/leaf-count`, {
@@ -50,6 +52,7 @@ const getLeafCount = async () => {
         user_id: userId,
       },
     })
+    console.log(response.data.leaf_count)
     return response.data.leaf_count
   } catch (error) {
     console.error(error)
@@ -85,8 +88,6 @@ const getIsAnswered = async () => {
 const apiHandlers = {
   answerCount: getAnswerCount,
   treeType: getTreeInfo,
-  flowerCount: getFlowerCount,
-  leafCount: getLeafCount,
   treeName: getTreeName,
   isAnswered: getIsAnswered,
 }
