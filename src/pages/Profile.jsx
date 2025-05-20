@@ -34,10 +34,9 @@ const Profile = () => {
       setIsLoading(true)
       const data = await getUserAnswers(profileNickname)
       setPostList(data)
-      console.log(data)
       setIsLoading(false)
     } catch (error) {
-      console.log(error.message) // 수정 예정
+      console.log(error.message)
     }
   }
 
@@ -104,7 +103,6 @@ const Profile = () => {
                 key={post.answer_id}
                 post={post}
                 showToggleIcon
-                // emotionIcon={getEmotionIcon(post.emotion_type)}
                 isExpanded
                 onCardClick={() => setExpandedPost(null)}
               ></AnswerCard>

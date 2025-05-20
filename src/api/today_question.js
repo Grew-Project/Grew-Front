@@ -4,7 +4,6 @@ import useAuthStore from '../store/useAuthStore'
 const BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 export const getTodayQuestion = async emotionType => {
-  //   const userId = useAuthStore.getState().userId
   try {
     const response = await axios.get(`${BASE_URL}/api/today/question-search`, {
       params: {
@@ -42,7 +41,6 @@ export const getQuestionCount = async () => {
         nickname,
       },
     })
-    // console.log(response.data)
 
     return response
   } catch (error) {

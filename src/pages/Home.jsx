@@ -130,7 +130,7 @@ const Home = () => {
       try {
         const response = await getCurrentWeather()
         setWeatherType(normalizeWeather(response.weather[0].main))
-        setWeatherType('Clear')
+        // setWeatherType('Clear')
         // setWeatherType('Clouds')
         // setWeatherType('Rain')
         // setWeatherType('Snow')
