@@ -9,7 +9,7 @@ import profileIcon from '@/assets/icons/profile-icon.svg'
 import refreshIcon from '@/assets/icons/refresh-icon.svg'
 
 import styled from 'styled-components'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { checkFlower, getPostList, sendFlower, sendLeaf } from '../api/community'
 import { InputModal } from '../components/modal/InputModal'
 import { MessageModal } from '../components/modal/MessageModal'
@@ -42,28 +42,27 @@ const emotionIcons = {
 const Community = () => {
   const [selectedFace, setSelectedFace] = useState('all')
   const [postList, setPostList] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
   const [modalType, setModalType] = useState(null)
   const [expandedPost, setExpandedPost] = useState(null)
   const [targetNickname, setTargetNickname] = useState('')
   const [leafMessage, setLeafMessage] = useState('')
-  const [flowerSentMap, setFlowerSentMap] = useState({}) // nickname → true/false
+  const [flowerSentMap, setFlowerSentMap] = useState({})
   const [isSentLeaf, setIsSentLeaf] = useState(false)
-
+  const [isLoadingPostList, setIsLoadingPostList] = useState(true)
+  const [isLoadingFlowerStatus, setIsLoadingFlowerStatus] = useState(true)
   const navigate = useNavigate()
 
   const nickname = useAuthStore(state => state.nickname)
 
   const fetchPostList = async () => {
     try {
-      setIsLoading(true)
+      setIsLoadingPostList(true)
       const data = await getPostList()
       setPostList(data)
-      setTimeout(() => {}, 500)
     } catch (error) {
-      console.log(error.message) // 수정 예정
+      console.error(error.message)
     } finally {
-      setIsLoading(false)
+      setIsLoadingPostList(false)
     }
   }
 
@@ -71,21 +70,36 @@ const Community = () => {
     fetchPostList()
   }, [])
 
-  useEffect(() => {
-    const fetchFlowerStatus = async () => {
-      const uniqueNicknames = [...new Set(postList.map(post => post.nickname))]
-      const statusMap = {}
+  const uniqueNicknames = useMemo(() => {
+    return [...new Set(postList.map(post => post.nickname))]
+  }, [postList])
 
-      for (const receiverNickname of uniqueNicknames) {
-        const data = await checkFlower(receiverNickname, nickname)
-        statusMap[receiverNickname] = data
-      }
+  const fetchFlowerStatus = async () => {
+    setIsLoadingFlowerStatus(true)
+    try {
+      const results = await Promise.all(
+        uniqueNicknames.map(receiverNickname =>
+          checkFlower(receiverNickname, nickname).then(data => ({
+            receiverNickname,
+            data,
+          }))
+        )
+      )
+
+      const statusMap = results.reduce((acc, { receiverNickname, data }) => {
+        acc[receiverNickname] = data
+        return acc
+      }, {})
 
       setFlowerSentMap(statusMap)
-      console.log(nickname)
-      console.log(statusMap)
+    } catch (error) {
+      console.error('꽃 상태 조회 실패:', error)
+    } finally {
+      setIsLoadingFlowerStatus(false)
     }
+  }
 
+  useEffect(() => {
     if (postList.length > 0) fetchFlowerStatus()
   }, [postList])
 
@@ -102,16 +116,19 @@ const Community = () => {
     setExpandedPost(prev => (prev === id ? null : id))
   }
 
-  const handleSendFlower = async targetNickname => {
-    setTargetNickname(targetNickname)
-    try {
-      await sendFlower(targetNickname, nickname)
-      setModalType('flower')
-      setFlowerSentMap(prev => ({ ...prev, [targetNickname]: true }))
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  const handleSendFlower = useCallback(
+    async targetNickname => {
+      setTargetNickname(targetNickname)
+      try {
+        await sendFlower(targetNickname, nickname)
+        setModalType('flower')
+        setFlowerSentMap(prev => ({ ...prev, [targetNickname]: true }))
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    [nickname]
+  )
 
   const handlClickLeafBtn = targetNickname => {
     setTargetNickname(targetNickname)
@@ -129,12 +146,19 @@ const Community = () => {
     setModalType(null)
   }
 
+  const handleRefresh = async () => {
+    await fetchPostList()
+    await fetchFlowerStatus()
+  }
+
+  const isLoading = isLoadingPostList || isLoadingFlowerStatus
+
   return (
     <>
       <Header
         center={<span>커뮤니티</span>}
         right={
-          <button onClick={fetchPostList}>
+          <button onClick={handleRefresh}>
             <img src={refreshIcon} alt="새로고침" />
           </button>
         }
@@ -151,7 +175,6 @@ const Community = () => {
           </TabButton>
         ))}
       </TabMenu>
-      <Padding />
       {isLoading ? (
         <Loading />
       ) : filteredPosts.length === 0 ? (
@@ -223,19 +246,12 @@ export default Community
 
 const TabMenu = styled.div`
   display: flex;
+  width: 100%;
   justify-content: space-evenly;
   align-items: center;
-  margin-bottom: 0.6rem;
-  padding-bottom: 0.6rem;
-  width: calc(100% - 48px);
-  max-width: calc(480px - 48px);
-  position: fixed;
-  top: 104px;
-  background-color: var(--color-background);
+  margin-bottom: 1.2rem;
 `
-const Padding = styled.div`
-  height: calc(40px + 1.2rem);
-`
+
 const TabButton = styled.button`
   width: 70px;
   height: 40px;
