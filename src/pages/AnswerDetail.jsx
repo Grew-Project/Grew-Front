@@ -27,8 +27,11 @@ import lockIcon from '@/assets/icons/lock-icon.svg'
 import penIcon from '@/assets/icons/pen-icon.svg'
 import { Header } from '../components/Header'
 import { Loading } from '../components/Loading'
+import useUIStore from '../store/useAlarmStore.js'
 
 const AnswerDetail = () => {
+  const showToast = useUIStore(state => state.showToast)
+
   const { answerId } = useParams()
   const nickname = useAuthStore(state => state.nickname)
   const [isEdit, setIsEdit] = useState(false)
@@ -100,6 +103,7 @@ const AnswerDetail = () => {
       console.log(error)
     } finally {
       setIsLoading(false)
+      showToast('답변 수정이 완료되었습니다')
     }
   }
 
