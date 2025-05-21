@@ -10,14 +10,15 @@ import nextIcon from '@/assets/icons/next-icon.svg'
 import { InputModal } from '../components/modal/InputModal'
 import { MessageModal } from '../components/modal/MessageModal'
 import { ActionButton } from '../components/ActionButton'
-import { AnswerCard } from '../components/AnswerCard'
 import TitleListItem from '../components/TitleListItem'
 import { Header } from '../components/Header'
 import { Loading } from '../components/Loading'
-import { Alarm } from '../components/Alarm'
+import useUIStore from '../store/useAlarmStore'
+import { ProfileCard } from '../components/ProfileCard'
 
 const Profile = () => {
   const nickname = useAuthStore(state => state.nickname)
+  const showToast = useUIStore(state => state.showToast)
 
   const { profileNickname } = useParams()
 
@@ -27,7 +28,6 @@ const Profile = () => {
   const [postList, setPostList] = useState([])
   const [expandedPost, setExpandedPost] = useState(null)
   const [flowerSent, setFlowerSent] = useState(false)
-  const [isSentLeaf, setIsSentLeaf] = useState(false)
 
   const fetchUserAnswers = async () => {
     try {
@@ -41,7 +41,7 @@ const Profile = () => {
   }
 
   useEffect(() => {
-    fetchUserAnswers(profileNickname)
+    fetchUserAnswers()
   }, [])
 
   useEffect(() => {
@@ -62,14 +62,14 @@ const Profile = () => {
     sendFlower(profileNickname, nickname)
   }
 
-  const handleSendLeaf = () => {
-    sendLeaf(nickname, profileNickname, leafMessage).then(() => {
-      setIsSentLeaf(true)
-      setTimeout(() => {
-        setIsSentLeaf(false)
-      }, 3000)
-    })
-    setModalType(null)
+  const handleSendLeaf = async () => {
+    try {
+      await sendLeaf(nickname, profileNickname, leafMessage)
+      setModalType(null)
+      showToast(`${profileNickname} 님에게 잎사귀를 보냈어요!`)
+    } catch (error) {
+      showToast(`잎사귀 보내기에 실패했어요`)
+    }
   }
 
   const handlClickLeafBtn = () => {
@@ -99,13 +99,13 @@ const Profile = () => {
 
           if (isExpanded) {
             return (
-              <AnswerCard
+              <ProfileCard
                 key={post.answer_id}
                 post={post}
                 showToggleIcon
                 isExpanded
                 onCardClick={() => setExpandedPost(null)}
-              ></AnswerCard>
+              ></ProfileCard>
             )
           }
 
@@ -145,7 +145,6 @@ const Profile = () => {
           onCancel={() => setModalType(null)}
         />
       )}
-      {isSentLeaf && <Alarm text={`${profileNickname} 님에게 잎사귀를 보냈어요!`} />}
     </>
   )
 }

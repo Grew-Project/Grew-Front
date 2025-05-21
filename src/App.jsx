@@ -6,6 +6,7 @@ import GlobalStyle from './styles/GlobalStyle'
 import Layout from './layouts/CommonLayout'
 import AuthLayout from './layouts/AuthLayout'
 import { PrivateRoute, PublicRoute } from './Routes'
+import { ToastMessage } from './components/ToastMessage'
 
 const Home = lazy(() => import('./pages/Home'))
 const Login = lazy(() => import('./pages/Login'))
@@ -29,6 +30,7 @@ function App() {
       <GlobalStyle />
       <Suspense>
         <BrowserRouter>
+          <ToastMessage />
           <Routes>
             <Route element={<Layout />}>
               <Route path="/home" element={<PrivateRoute element={<Home />} />} />
