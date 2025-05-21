@@ -46,6 +46,8 @@ const Title = styled.div`
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
+  word-break: keep-all;
+  text-align: center;
 
   & > img {
     height: 22px;

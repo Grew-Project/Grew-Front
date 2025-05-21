@@ -1,52 +1,5 @@
-import { Card } from './Card'
 import styled from 'styled-components'
 import nextIcon from '@/assets/icons/next-icon.svg'
-
-const CardHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.75rem;
-  font-weight: bold;
-`
-
-const QuestionBlock = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-`
-
-const QuestionText = styled.div`
-  color: var(--color-primary);
-  margin-right: 0.3rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 300px;
-  ${({ expanded }) =>
-    expanded
-      ? `
-    white-space: normal;
-    word-break: keep-all;
-  `
-      : `
-    white-space: nowrap;
-    word-break: normal;
-  `};
-`
-
-const AnswerPreview = styled.p`
-  line-height: 1.5;
-  margin: 0 0 1rem;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: pointer;
-  word-break: keep-all;
-  overflow-wrap: break-word;
-  white-space: normal;
-  ${({ expanded }) => (expanded ? '' : '-webkit-line-clamp: 2;')}
-`
 
 export const AnswerCard = ({
   onCardClick,
@@ -57,34 +10,112 @@ export const AnswerCard = ({
   children,
 }) => {
   return (
-    <Card onClick={onCardClick}>
+    <CommunityCard onClick={onCardClick}>
       <CardHeader>
-        <QuestionBlock>
+        <TopRow>
           <QuestionText expanded={isExpanded}>{post.question_content}</QuestionText>
-          {emotionIcon && <img src={emotionIcon} alt={post.emotion_type} />}
-        </QuestionBlock>
-
-        <RightSide>
-          <span>{post.nickname}</span>
-          {showToggleIcon && (
-            <ArrowIcon src={nextIcon} style={{ transform: 'rotate(90deg)' }} alt="화살표" />
-          )}
-        </RightSide>
+          {emotionIcon && <EmotionIcon src={emotionIcon} alt={post.emotion_type} />}
+        </TopRow>
+        <BottomRow>
+          <Nickname>
+            by <strong>{post.nickname}</strong>
+          </Nickname>
+          {showToggleIcon && <ArrowIcon src={nextIcon} alt="화살표" />}
+        </BottomRow>
+        <AnswerPreview expanded={isExpanded}>{post.answer_content}</AnswerPreview>
       </CardHeader>
 
-      <AnswerPreview expanded={isExpanded}>{post.answer_content}</AnswerPreview>
       {children}
-    </Card>
+    </CommunityCard>
   )
 }
 
-const RightSide = styled.div`
+const CommunityCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1rem;
+  max-width: 100%;
+  cursor: pointer;
+`
+
+const CardHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`
+
+const TopRow = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.5rem;
+`
+
+const QuestionText = styled.div`
+  font-weight: bold;
+  color: var(--color-primary);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  ${({ expanded }) =>
+    expanded
+      ? `
+    white-space: normal;
+    word-break: keep-all;
+  `
+      : `
+    white-space: nowrap;
+    word-break: break-word;
+  `};
+`
+
+const EmotionIcon = styled.img`
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+`
+
+const AnswerPreview = styled.p`
+  margin: 0;
+  line-height: 1.5;
+  color: #444;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  white-space: normal;
+
+  ${({ expanded }) =>
+    expanded
+      ? ''
+      : `
+    -webkit-line-clamp: 2;
+  `}
+`
+
+const BottomRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #666;
+`
+
+const Nickname = styled.span`
+  word-break: break-word;
+  max-width: 100%;
 `
 
 const ArrowIcon = styled.img`
   width: 20px;
   height: 20px;
+  transform: rotate(90deg);
 `

@@ -9,7 +9,7 @@ import profileIcon from '@/assets/icons/profile-icon.svg'
 import refreshIcon from '@/assets/icons/refresh-icon.svg'
 
 import styled from 'styled-components'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { checkFlower, getPostList, sendFlower, sendLeaf } from '../api/community'
 import { InputModal } from '../components/modal/InputModal'
 import { MessageModal } from '../components/modal/MessageModal'
@@ -17,10 +17,10 @@ import { ActionButton } from '../components/ActionButton'
 import { AnswerCard } from '../components/AnswerCard'
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../store/useAuthStore'
-import { Alarm } from '../components/Alarm'
 import { Header } from '../components/Header'
 import { Loading } from '../components/Loading'
 import Empty from '../components/Empty'
+import useUIStore from '../store/useAlarmStore'
 
 const menuItems = [
   { id: 'all', label: '전체' },
@@ -47,12 +47,12 @@ const Community = () => {
   const [targetNickname, setTargetNickname] = useState('')
   const [leafMessage, setLeafMessage] = useState('')
   const [flowerSentMap, setFlowerSentMap] = useState({})
-  const [isSentLeaf, setIsSentLeaf] = useState(false)
   const [isLoadingPostList, setIsLoadingPostList] = useState(true)
   const [isLoadingFlowerStatus, setIsLoadingFlowerStatus] = useState(true)
-  const navigate = useNavigate()
 
+  const navigate = useNavigate()
   const nickname = useAuthStore(state => state.nickname)
+  const showToast = useUIStore(state => state.showToast)
 
   useEffect(() => {
     handleRefresh()
@@ -91,14 +91,14 @@ const Community = () => {
     setLeafMessage('')
   }
 
-  const handleSendLeaf = targetNickname => {
-    sendLeaf(nickname, targetNickname, leafMessage).then(() => {
-      setIsSentLeaf(true)
-      setTimeout(() => {
-        setIsSentLeaf(false)
-      }, 3000)
-    })
-    setModalType(null)
+  const handleSendLeaf = async targetNickname => {
+    try {
+      await sendLeaf(nickname, targetNickname, leafMessage)
+      setModalType(null)
+      showToast(`${targetNickname} 님에게 잎사귀를 보냈어요!`)
+    } catch (error) {
+      showToast(`잎사귀 보내기에 실패했어요`)
+    }
   }
 
   const handleRefresh = async () => {
@@ -220,7 +220,6 @@ const Community = () => {
           onCancel={() => setModalType(null)}
         />
       )}
-      {isSentLeaf && <Alarm text={`${targetNickname} 님에게 잎사귀를 보냈어요!`} />}
     </>
   )
 }

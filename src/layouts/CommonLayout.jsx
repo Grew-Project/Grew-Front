@@ -24,7 +24,7 @@ const Container = styled.div`
 const Wrapper = styled.div`
   max-width: 480px;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   box-sizing: border-box;
   position: relative;
   padding: 104px 24px 80px 24px;

@@ -7,9 +7,11 @@ import { ConfirmModal } from '../components/modal/ConfirmModal'
 import { changePassword } from '../api/mypage'
 import useAuthStore from '../store/useAuthStore'
 import { Header } from '../components/Header'
+import useUIStore from '../store/useAlarmStore'
 
 const MyPage = () => {
   const logout = useAuthStore(state => state.logout)
+  const showToast = useUIStore(state => state.showToast)
 
   const userId = useAuthStore(state => state.userId)
 
@@ -77,6 +79,7 @@ const MyPage = () => {
       await changePassword(current, newPw, userId)
       setModalType(null)
       setPwValues({})
+      showToast('비밀번호가 변경되었습니다')
     } catch (error) {
       console.error(error)
     }
@@ -85,6 +88,7 @@ const MyPage = () => {
   const handleLogoutClick = () => {
     logout()
     setModalType(null)
+    showToast('로그아웃 되었습니다')
   }
 
   return (
